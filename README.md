@@ -16,6 +16,9 @@ Zaměřte se a navrhněte inovativní způsob interakce. Toto řešení implemen
 * Mbstring PHP rozšíření
 * Tokenizer PHP rozšíření
 * XML PHP rozšíření
+* **Pro instalaci:**
+  * [Composer](https://getcomposer.org/) - pro instalaci back-end závislostí
+  * [Node.js](https://nodejs.org/en/) nebo [Yarn](https://yarnpkg.com/lang/en/) - pro instalaci a kompilaci front-end závislostí
 
 ### Postup instalace:
 Ve **složce s projektem** proveďte:
@@ -27,4 +30,10 @@ $ php artisan key:generate
 $ php artisan migrate --seed
 $ php artisan storage:link
 $ yarn
+```
+
+### Postup testování UI:
+```bash
+# Nezapomeňte předtím správně nastavit APP_URL vsouboru .env
+$ php artisan dusk
 ```
