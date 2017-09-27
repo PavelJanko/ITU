@@ -17,23 +17,39 @@ Zaměřte se a navrhněte inovativní způsob interakce. Toto řešení implemen
 * Tokenizer PHP rozšíření
 * XML PHP rozšíření
 * **Pro instalaci:**
-  * [Composer](https://getcomposer.org/) - pro instalaci back-end závislostí
-  * [Node.js](https://nodejs.org/en/) nebo [Yarn](https://yarnpkg.com/lang/en/) - pro instalaci a kompilaci front-end závislostí
+  * [Composer](https://getcomposer.org/) - back-end závislosti
+  * [Node.js](https://nodejs.org/en/) nebo [Yarn](https://yarnpkg.com/lang/en/) - front-end závislosti
+* **Pro testování back-endu:**
+  * [PHPUnit](https://phpunit.de/)
 
 ### Postup instalace:
 Ve **složce s projektem** proveďte:
 ```bash
+# Po zkopírování upravit soubor podle prostředí
 $ cp .env.example .env
-# Poté soubor .env upravit podle prostředí
+# Stažení back-end závislostí
 $ composer install
 $ php artisan key:generate
+# Migrace a populace databáze testovacími daty
 $ php artisan migrate --seed
 $ php artisan storage:link
+# Stažení front-end závislostí
 $ yarn
+# Kompilace front-end závislostí
+$ yarn run development
 ```
 
 ### Postup testování UI:
+Testování funguje přes Laravel Dusk, který využívá samostatnou [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/home) instalaci.
+
+Ve **složce s projektem** proveďte:
 ```bash
 # Nezapomeňte předtím správně nastavit APP_URL vsouboru .env
 $ php artisan dusk
+```
+
+### Postup testování back-endu:
+Ve **složce s projektem** proveďte:
+```bash
+$ phpunit
 ```

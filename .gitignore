@@ -1,8 +1,6 @@
 /.idea
 /node_modules
-/public/css
 /public/hot
-/public/js
 /public/storage
 /storage/*.key
 /vendor

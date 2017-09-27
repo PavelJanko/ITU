@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'DocumentController@index')->name('document.index');
+
+Route::resource('document', 'DocumentController', ['except' => 'index']);

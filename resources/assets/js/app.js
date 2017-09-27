@@ -7,6 +7,8 @@
 
 require('./bootstrap');
 
+window.Holder = require('holderjs');
+
 window.Vue = require('vue');
 
 /**
