@@ -62,7 +62,7 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        //
+        echo $document->name;
     }
 
     /**

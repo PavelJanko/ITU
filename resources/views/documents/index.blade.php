@@ -10,8 +10,9 @@
         <div class="card-columns">
             @foreach($documents as $document)
                 <div class="card">
+                    <img src="{{ $document->getMedia()->first()->getUrl('thumb') }}" alt="{{ $document->name }} thumbnail" class="card-img-top">
                     <div class="card-body">
-                        <h4 class="card-title">{{ $document->id }}</h4>
+                        <h4 class="card-title"><a href="{{ route('document.show', ['slug' => $document->slug]) }}">{{ $document->name }}</a></h4>
                         <p class="card-text">
                             @foreach($document->keywords as $keyword)
                                 <a href="#">{{ $keyword->name }}</a>

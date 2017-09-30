@@ -2,10 +2,17 @@
 
 namespace App;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use Spatie\MediaLibrary\Media;
 
-class Document extends Model
+class Document extends Model implements HasMediaConversions
 {
+    use HasMediaTrait, Searchable, Sluggable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,5 +50,52 @@ class Document extends Model
     public function keywords()
     {
         return $this->belongsToMany(Keyword::class);
+    }
+
+    /**
+     * Define conversions for media.
+     *
+     * @param Media|null $media
+     */
+    public function registerMediaConversions(Media $media = null)
+    {
+        $this->addMediaConversion('thumb')
+            ->width(256)
+            ->height(128)
+            ->sharpen(10);
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
+
+    /**
+     * Restrict the columns for indexing the database.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return array_only($this->toArray(), ['id', 'name', 'abstract']);
     }
 }

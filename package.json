@@ -13,11 +13,12 @@
         "axios": "^0.16.2",
         "bootstrap": "^4.0.0-beta",
         "cross-env": "^5.0.1",
-        "jquery": "^3.2.1",
         "holderjs": "^2.9.4",
+        "jquery": "^3.2.1",
         "laravel-mix": "^1.0",
         "lodash": "^4.17.4",
         "popper.js": "^1.12.5",
-        "vue": "^2.1.10"
+        "vue": "^2.1.10",
+        "vue-instantsearch": "^1.0.1"
     }
 }
