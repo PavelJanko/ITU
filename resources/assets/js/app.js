@@ -9,6 +9,8 @@ require('./bootstrap');
 
 window.Holder = require('holderjs');
 
+window.S2 = require('select2');
+
 window.Vue = require('vue');
 
 import InstantSearch from 'vue-instantsearch';
