@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', 'DocumentController@index')->name('document.index');
-
-Route::resource('document', 'DocumentController', ['except' => 'index']);
+Route::get('/', function() {
+    return 'test';
+});
+//Route::get('/', 'DocumentController@index')->name('document.index');
+//
+//Route::resource('document', 'DocumentController', ['except' => 'index']);

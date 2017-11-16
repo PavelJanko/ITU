@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -38,12 +39,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the group of a user.
+     * Get the groups a user belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function group()
+    public function groups()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsToMany(Group::class);
+    }
+
+    /**
+     * Restrict the columns for indexing the database.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return array_only($this->toArray(), ['id', 'email']);
     }
 }

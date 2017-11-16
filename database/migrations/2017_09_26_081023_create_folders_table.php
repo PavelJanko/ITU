@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDocumentsTable extends Migration
+class CreateFoldersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDocumentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('folders', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('owner_id')->unsigned();
@@ -27,9 +27,6 @@ class CreateDocumentsTable extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('name');
-            $table->string('slug');
-            $table->string('suffix');
-            $table->text('abstract');
             $table->timestamps();
         });
     }
@@ -41,6 +38,6 @@ class CreateDocumentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('folders');
     }
 }

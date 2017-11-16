@@ -4,14 +4,10 @@ namespace App;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
-use Spatie\MediaLibrary\Media;
 
-class Document extends Model implements HasMediaConversions
+class Document extends Model
 {
-    use HasMediaTrait, Searchable, Sluggable;
+    use Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -53,16 +49,13 @@ class Document extends Model implements HasMediaConversions
     }
 
     /**
-     * Define conversions for media.
+     * Get the owner of a document.
      *
-     * @param Media|null $media
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function registerMediaConversions(Media $media = null)
+    public function owner()
     {
-        $this->addMediaConversion('thumb')
-            ->width(256)
-            ->height(128)
-            ->sharpen(10);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -87,15 +80,5 @@ class Document extends Model implements HasMediaConversions
                 'source' => 'name'
             ]
         ];
-    }
-
-    /**
-     * Restrict the columns for indexing the database.
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        return array_only($this->toArray(), ['id', 'name', 'abstract']);
     }
 }
