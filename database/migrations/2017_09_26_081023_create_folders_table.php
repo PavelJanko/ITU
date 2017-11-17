@@ -27,6 +27,7 @@ class CreateFoldersTable extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('name');
+            $table->string('slug');
             $table->timestamps();
         });
     }

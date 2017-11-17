@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function() {
-    return 'test';
-});
-//Route::get('/', 'DocumentController@index')->name('document.index');
+Route::get('/', 'DashboardController@index')->name('dashboard.index');
 //
-//Route::resource('document', 'DocumentController', ['except' => 'index']);
+Route::resource('document', 'DocumentController', ['except' => 'index']);
+
+Route::get('folder/{folder?}', 'DashboardController@folder')->name('dashboard.folder');
+
+Auth::routes();

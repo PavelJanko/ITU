@@ -16,7 +16,7 @@ class Group extends Model
     ];
 
     /**
-     * Get the documents which a group can access.
+     * Get the documents that the members of a group can access.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

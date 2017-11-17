@@ -12,55 +12,71 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $timeStarted = microtime(true);
+        $timeStarted = \Carbon\Carbon::now();
 
-        $this->command->info('Seeding users into the database...');
+        $this->command->info('Seeduji uživatele...');
         factory(App\User::class, 50)->create();
 
-        $this->command->info('Seeding groups into the database and attaching them to users...');
+        $this->command->info('Seeduji skupiny a připojuji je k uživatelům...');
         factory(App\Group::class, 25)->create()
             ->each(function ($group) {
                 for ($i = 0; $i < rand(0, 10); $i++)
                     $group->members()->syncWithoutDetaching(rand(1, \App\User::count()));
             });
 
-        $this->command->info('Seeding folders into the database and attaching them to groups...');
+        $this->command->info('Seeduji složky a připojuji je ke skupinám...');
         factory(App\Folder::class, 150)->create()
             ->each(function ($folder) {
-                for ($i = 0; $i < rand(0, 1); $i++)
-                    $folder->groups()->syncWithoutDetaching(rand(1, \App\Group::count()));
+                for ($i = 0; $i < rand(0, 1); $i++) {
+                    $folderOwner = $folder->owner;
+                    $groupId = rand(1, \App\Group::count());
+
+                    if(!$folderOwner->groups->pluck('id')->contains($groupId))
+                        $folderOwner->groups()->syncWithoutDetaching($groupId);
+
+                    $folder->groups()->syncWithoutDetaching($groupId);
+                }
             });
 
         foreach(App\Folder::all() as $folder) {
             for ($i = 0; $i < rand(0, 1); $i++) {
-                $folder->parent_id = rand(1, \App\Folder::count());
+                if($folder->owner->folders->count())
+                $folder->parent_id = $folder->owner->folders->count() > 1 ?
+                    $folder->owner->folders->where('id', '<>', $folder->id)->pluck('id')->random() : NULL;
                 $folder->update();
             }
         }
 
-        $this->command->info('Seeding documents into the database and attaching them to groups...');
+        $this->command->info('Seeduji dokumenty a připojuji je ke skupinám...');
         factory(App\Document::class, 250)->create()
             ->each(function ($document) {
-                for($i = 0; $i < rand(0, 2); $i++)
-                    $document->groups()->syncWithoutDetaching(rand(1, \App\Group::count()));
+                for($i = 0; $i < rand(0, 2); $i++) {
+                    $documentOwner = $document->owner;
+                    $groupId = rand(1, \App\Group::count());
+
+                    if(!$documentOwner->groups->pluck('id')->contains($groupId))
+                        $documentOwner->groups()->syncWithoutDetaching($groupId);
+
+                    $document->groups()->syncWithoutDetaching($groupId);
+                }
             });
 
-        $this->command->info('Seeding keywords into the database and attaching them to documents...');
+        $this->command->info('Seeduji klíčová slova a připojuji je k dokumentům...');
         factory(App\Keyword::class, 25)->create()
             ->each(function ($keyword) {
                 for($i = 0; $i < rand(0, 5); $i++)
                     $keyword->documents()->syncWithoutDetaching(rand(1, \App\Document::count()));
             });
 
-        $this->command->info('Seeding comments into the database...');
+        $this->command->info('Seeduji komentáře...');
         factory(App\Comment::class, 500)->create();
 
-        $this->command->info('Importing records into index...');
+        $this->command->info('Importuji záznamy do indexu...');
         Artisan::call('scout:import', [
             'model' => 'App\User',
         ]);
 
-        $timeSpent = microtime(true) - $timeStarted;
-        $this->command->comment('Seeding lasted ' . round($timeSpent / 60, 2) . ' minutes.');
+        $timeSpent = \Carbon\Carbon::now()->diffForHumans($timeStarted, true);
+        $this->command->comment('Hotovo! Seedování trvalo ' . $timeSpent . '.');
     }
 }

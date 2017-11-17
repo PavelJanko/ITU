@@ -39,6 +39,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the documents that a user can access.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'owner_id');
+    }
+
+    /**
+     * Get the folders that a user can access.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function folders()
+    {
+        return $this->hasMany(Folder::class, 'owner_id');
+    }
+
+    /**
      * Get the groups a user belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

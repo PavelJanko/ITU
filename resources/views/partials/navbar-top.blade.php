@@ -7,16 +7,21 @@
 
         <div class="collapse navbar-collapse" id="navbarTop">
             <form class="form-inline">
-                <input class="form-control mr-2" type="text" placeholder="Vyhledávání publikací">
+                <input class="form-control mr-2" type="text" placeholder="backup.docx">
                 <button class="btn btn-outline-success" type="submit">Vyhledat</button>
             </form>
             <ul class="navbar-nav ml-auto">
                 @if(Auth::check())
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mé soubory</a>
+                    </li>
                     <li class="nav-item mr-2">
-                        <a class="nav-link" href="#">Administrace</a>
+                        <a class="nav-link" href="#">Skupiny a sdílení</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary" href="#" role="button">Odhlásit</a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            <button class="btn btn-primary" type="submit">Odhlásit</button>
+                        </form>
                     </li>
                 @else
                     <li class="nav-item mr-2">
