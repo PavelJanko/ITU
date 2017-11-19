@@ -51,7 +51,15 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->request->add(['owner_id' => Auth::user()->id]);
+        $request->request->add(['name' => $request->document->getClientOriginalName()]);
+
+        $extension = $request->document->extension();
+        $request->request->add(['extension' => $extension != NULL ? $extension : '']);
+
+        $document = Document::create($request->only(['owner_id', 'parent_id', 'name', 'extension', 'abstract']));
+        $document->addMediaFromRequest('document')->toMediaCollection();
+        return redirect()->route('dashboard.index');
     }
 
     /**
@@ -60,9 +68,12 @@ class DocumentController extends Controller
      * @param  \App\Document  $document
      * @return \Illuminate\Http\Response
      */
-    public function show(Document $document)
+    public function download(Document $document)
     {
-        echo $document->name;
+        if(Auth::user()->id == $document->owner_id)
+            return response()->download($document->getMedia()->first()->getPath());
+
+        abort(404);
     }
 
     /**

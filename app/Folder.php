@@ -10,6 +10,15 @@ class Folder extends Model
     use Sluggable;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'owner_id', 'parent_id', 'name',
+    ];
+
+    /**
      * Get the documents inside of a folder.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

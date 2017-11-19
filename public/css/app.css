@@ -9717,3 +9717,7 @@ a.text-dark:hover {
   visibility: hidden !important;
 }
 
+.modal-header .close {
+  padding: 18px;
+}
+

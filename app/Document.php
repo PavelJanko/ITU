@@ -4,10 +4,12 @@ namespace App;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
 
-class Document extends Model
+class Document extends Model implements HasMedia
 {
-    use Sluggable;
+    use HasMediaTrait, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +17,7 @@ class Document extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'abstract',
+        'owner_id', 'parent_id', 'name', 'extension', 'abstract',
     ];
 
     /**

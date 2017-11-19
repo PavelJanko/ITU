@@ -8,5 +8,9 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
+.modal-header .close {
+  padding: $modal-header-padding + 3px;
+}
+
 // Select2
 //@import "~select2/src/scss"

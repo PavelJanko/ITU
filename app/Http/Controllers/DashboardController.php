@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Document;
-use App\Folder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,35 +30,6 @@ class DashboardController extends Controller
         return view('dashboard.index')->with([
             'documents' => $documents,
             'folders' => $folders,
-            'pageTitle' => 'Mé soubory'
-        ]);
-    }
-
-    /**
-     * Display a listing of files and folders that the user can access.
-     * Also show the user groups he belongs to.
-     *
-     * @param Folder $folder
-     * @return @return \Illuminate\Http\Response
-     */
-    public function folder(Folder $folder = NULL)
-    {
-        $documents = $folders = $parentFolder = NULL;
-
-        if($folder == NULL) {
-            $documents = Auth::user()->documents->where('parent_id', NULL);
-            $folders = Auth::user()->folders->where('parent_id', NULL);;
-        } elseif(Auth::user()->id == $folder->owner->id) {
-            $documents = $folder->documents;
-            $folders = $folder->folders;
-            $parentFolder = $folder;
-        } else
-            abort(401);
-
-        return view('partials.dashboard-table')->with([
-            'documents' => $documents,
-            'folders' => $folders,
-            'parentFolder' => $parentFolder,
             'pageTitle' => 'Mé soubory'
         ]);
     }

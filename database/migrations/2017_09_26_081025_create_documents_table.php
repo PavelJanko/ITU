@@ -27,9 +27,9 @@ class CreateDocumentsTable extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('name');
-            $table->string('slug');
-            $table->string('suffix');
+            $table->string('extension');
             $table->text('abstract');
+            $table->string('slug');
             $table->timestamps();
         });
     }

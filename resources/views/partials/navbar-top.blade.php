@@ -13,7 +13,7 @@
             <ul class="navbar-nav ml-auto">
                 @if(Auth::check())
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Mé soubory</a>
+                        <a class="nav-link" href="{{ route('dashboard.index') }}">Mé soubory</a>
                     </li>
                     <li class="nav-item mr-2">
                         <a class="nav-link" href="#">Skupiny a sdílení</a>

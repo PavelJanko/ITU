@@ -11,10 +11,9 @@
 |
 */
 
-Route::get('/', 'DashboardController@index')->name('dashboard.index');
-//
-Route::resource('document', 'DocumentController', ['except' => 'index']);
-
-Route::get('folder/{folder?}', 'DashboardController@folder')->name('dashboard.folder');
-
 Auth::routes();
+Route::get('/', 'DashboardController@index')->name('dashboard.index');
+Route::resource('document', 'DocumentController', ['except' => 'index', 'show']);
+Route::get('document/{document?}/stahnout', 'DocumentController@download')->name('document.download');
+Route::resource('folder', 'FolderController', ['only' => ['store', 'update']]);
+Route::get('folder/{folder?}', 'FolderController@getContents')->name('folder.contents');
