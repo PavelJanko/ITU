@@ -15,7 +15,7 @@
     <body>
         <div id="app">
             @include('partials.navbar-top')
-            @yield('content')
+            @yield('layout')
         </div>
 
         {{-- Scripts --}}

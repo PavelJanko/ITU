@@ -9,7 +9,7 @@ $factory->define(App\Document::class, function (Faker $faker) {
         'owner_id' => $documentOwner,
         'parent_id' => $documentOwner->folders->count() ? $documentOwner->folders->pluck('id')->random() : NULL,
         'name' => $faker->sentence(rand(3, 6)),
-        'extension' => $faker->randomElement(['txt', 'docx', 'xlsx', 'odt']),
+        'extension' => $faker->fileExtension,
         'abstract' => $faker->realText(1000),
     ];
 });

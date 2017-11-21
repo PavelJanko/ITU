@@ -61,6 +61,16 @@ class Document extends Model implements HasMedia
     }
 
     /**
+     * Get the parent folder of a document.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Folder::class, 'parent_id');
+    }
+
+    /**
      * Get the route key for the model.
      *
      * @return string

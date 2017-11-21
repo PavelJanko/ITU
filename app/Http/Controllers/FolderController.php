@@ -20,28 +20,41 @@ class FolderController extends Controller
      * Display a listing of files and folders that the user can access.
      * Also show the user groups he belongs to.
      *
+     * @return @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $documents = Auth::user()->documents->where('parent_id', NULL);
+        $folders = Auth::user()->folders->where('parent_id', NULL);
+
+        return view('dashboard.index')->with([
+            'documents' => $documents,
+            'folders' => $folders,
+            'pageTitle' => 'Mé soubory'
+        ]);
+    }
+
+    /**
+     * Display a listing of files and folders that the user can access.
+     * Also show the user groups he belongs to.
+     *
      * @param Folder $folder
      * @return @return \Illuminate\Http\Response
      */
-    public function getContents(Folder $folder = NULL)
+    public function show(Folder $folder)
     {
-        $documents = $folders = $parentFolder = NULL;
-
-        if($folder == NULL) {
-            $documents = Auth::user()->documents->where('parent_id', NULL);
-            $folders = Auth::user()->folders->where('parent_id', NULL);;
-        } elseif(Auth::user()->id == $folder->owner->id) {
+        if(Auth::user()->id == $folder->owner->id) {
             $documents = $folder->documents;
             $folders = $folder->folders;
             $parentFolder = $folder;
         } else
             abort(401);
 
-        return view('partials.dashboard-table')->with([
+        return view('dashboard.index')->with([
             'documents' => $documents,
             'folders' => $folders,
-            'parentFolder' => $parentFolder,
-            'pageTitle' => 'Mé soubory'
+            'pageTitle' => 'Mé soubory',
+            'parentFolderId' => $folder->id
         ]);
     }
 
@@ -53,57 +66,66 @@ class FolderController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->has('parent_id') && Folder::where('parent_id', $request->parent_id)->pluck('name')->contains($request->name))
+        if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
             return back()->withInput();
 
         $request->request->add(['owner_id' => Auth::user()->id]);
-        Folder::create($request->only(['owner_id', 'parent_id', 'name']));
 
-        return redirect()->route('dashboard.index');
+        $folder = Folder::create($request->only(['owner_id', 'parent_id', 'name']));
+
+        $route = $folder->parent == NULL ? 'index' : 'show';
+
+        return redirect()->route('folder.' . $route, $folder->parent);
     }
 
     /**
-     * Display the specified resource.
+     * Update the specified folder in storage.
      *
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Folder $folder)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Folder $folder)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Folder $folder
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Folder $folder)
     {
-        //
+        if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
+            return back()->withInput();
+
+        $folder->name = $request->name;
+        $folder->update();
+
+        return redirect()->back();
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified folder and it's contents from storage.
      *
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
+     * @param Folder $folder
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Folder $folder)
     {
-        //
+        if($folder != NULL && $folder->owner_id == Auth::user()->id) {
+            $this->mediaDelete($folder);
+            $folder->delete();
+        } else
+            abort(401);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Recursive function for deleting the media
+     * associated with the documents inside a folder.
+     *
+     * @param Folder $folder
+     */
+    public function mediaDelete(Folder $folder)
+    {
+        if($folder->folders->count())
+            foreach($folder->folders as $folderRec)
+                $this->mediaDelete($folderRec);
+
+        foreach($folder->documents as $document)
+            $document->delete();
     }
 }

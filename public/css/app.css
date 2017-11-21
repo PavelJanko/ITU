@@ -6040,7 +6040,7 @@ button.close {
 
 .tooltip-inner {
   max-width: 200px;
-  padding: 3px 8px;
+  padding: 8px 8px;
   color: #fff;
   text-align: center;
   background-color: #000;
@@ -9719,5 +9719,10 @@ a.text-dark:hover {
 
 .modal-header .close {
   padding: 18px;
+}
+
+.dashboard-table td {
+  padding: 0.5rem;
+  vertical-align: middle;
 }
 

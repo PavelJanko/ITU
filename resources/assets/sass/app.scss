@@ -6,10 +6,17 @@
 //@import "variables";
 
 // Bootstrap
+$tooltip-padding-y: 8px;
+
 @import "~bootstrap/scss/bootstrap";
 
 .modal-header .close {
   padding: $modal-header-padding + 3px;
+}
+
+.dashboard-table td {
+  padding: 0.5rem;
+  vertical-align: middle;
 }
 
 // Select2

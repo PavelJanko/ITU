@@ -40,9 +40,17 @@ class DatabaseSeeder extends Seeder
 
         foreach(App\Folder::all() as $folder) {
             for ($i = 0; $i < rand(0, 1); $i++) {
-                if($folder->owner->folders->count())
-                $folder->parent_id = $folder->owner->folders->count() > 1 ?
-                    $folder->owner->folders->where('id', '<>', $folder->id)->pluck('id')->random() : NULL;
+                if($folder->owner->folders->count()) {
+                    $folder->parent_id = $folder->owner->folders->count() > 1 ?
+                        $folder->owner->folders->where('id', '<>', $folder->id)->pluck('id')->random() : NULL;
+
+                    if(!$folder->owner->folders->where('parent_id', '<>', NULL)->count()) {
+                        $rootFolder = $folder->owner->folders->first();
+                        $rootFolder->parent_id = NULL;
+                        $rootFolder->update();
+                    }
+                }
+
                 $folder->update();
             }
         }
@@ -50,6 +58,8 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Seeduji dokumenty a připojuji je ke skupinám...');
         factory(App\Document::class, 250)->create()
             ->each(function ($document) {
+                $document->copyMedia('storage/seeding_files/file' . rand(1, 10) . '.dat')->toMediaCollection();
+
                 for($i = 0; $i < rand(0, 2); $i++) {
                     $documentOwner = $document->owner;
                     $groupId = rand(1, \App\Group::count());

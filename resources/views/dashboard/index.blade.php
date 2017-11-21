@@ -1,17 +1,24 @@
-@extends('core')
+@extends('layouts.basic')
 
 @section('content')
-    <div class="container" id="dashboardTable">
+    <div class="container">
         @include('partials.dashboard-table')
     </div>
 @endsection
 
 @section('scripts')
     <script>
-        $(document.body).on('click', '.testFolder', function(e) {
-            e.preventDefault();
-            axios.get($(event.target).attr('href'))
-                .then(response => $('#dashboardTable').html(response.data));
+        $('[data-toggle="tooltip"]').tooltip({
+            html: true,
+            placement: 'left'
+        });
+
+        $('#newDocument').on('shown.bs.modal', function() {
+            $('#modalDocumentAbstract').trigger('focus')
+        });
+
+        $('#newFolder').on('shown.bs.modal', function() {
+            $('#modalFolderName').trigger('focus')
         });
     </script>
 @endsection
