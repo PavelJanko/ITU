@@ -13,7 +13,8 @@
 
 Auth::routes();
 
-Route::resource('document', 'DocumentController', ['except' => ['index', 'show']]);
-Route::get('document/{document}/download', 'DocumentController@download')->name('document.download');
-Route::get('/', 'FolderController@index')->name('folder.index');
-Route::resource('folder', 'FolderController', ['except' => ['index', 'create', 'edit']]);
+Route::resource('documents', 'DocumentController', ['except' => ['index']]);
+Route::get('documents/{document}/download', 'DocumentController@download')->name('documents.download');
+Route::get('/', 'FolderController@index')->name('folders.index');
+Route::resource('folders', 'FolderController', ['except' => ['index', 'create', 'edit']]);
+Route::get('keywords', 'KeywordController@index')->name('keywords.index');

@@ -7,6 +7,7 @@ Zaměřte se a navrhněte inovativní způsob interakce. Toto řešení implemen
 ### Použité technologie:
 * [Laravel](https://laravel.com/)
 * [Bootstrap](https://getbootstrap.com/)
+* [jQuery](https://jquery.com/)
 * [Vue.js](https://vuejs.org/)
 
 ### Požadavky:
@@ -19,16 +20,16 @@ Zaměřte se a navrhněte inovativní způsob interakce. Toto řešení implemen
 * **Pro instalaci:**
   * [Composer](https://getcomposer.org/) - back-end závislosti
   * [Node.js](https://nodejs.org/en/) nebo [Yarn](https://yarnpkg.com/lang/en/) - front-end závislosti
-* **Pro testování back-endu:**
-  * [PHPUnit](https://phpunit.de/)
+* Poznámka: Je zapotřebí nakonfigurovat databázi pro persistenci uživatelů a dalších klíčových dat - při vývoji jsme používali [MariaDB](https://mariadb.org/), ale Laravel podporuje mnoho dalších, jako [PostgreSQL](https://www.postgresql.org/), [SQLite](https://www.sqlite.org/), a další.
 
 ### Postup instalace:
 Ve **složce s projektem** proveďte:
 ```bash
-# Po zkopírování upravit soubor podle prostředí
+# Zkopírovat soubor prostředí a následně jej upravit
 $ cp .env.example .env
 # Stažení back-end závislostí
 $ composer install
+# Vygenerování klíče použitého pro šifrování například uživatelských hesel
 $ php artisan key:generate
 # Migrace a populace databáze testovacími daty
 $ php artisan migrate --seed
@@ -37,19 +38,4 @@ $ php artisan storage:link
 $ yarn
 # Kompilace front-end závislostí
 $ yarn run development
-```
-
-### Postup testování UI:
-Testování funguje přes Laravel Dusk, který využívá samostatnou [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/home) instalaci.
-
-Ve **složce s projektem** proveďte:
-```bash
-# Nezapomeňte předtím správně nastavit APP_URL vsouboru .env
-$ php artisan dusk
-```
-
-### Postup testování back-endu:
-Ve **složce s projektem** proveďte:
-```bash
-$ phpunit
 ```

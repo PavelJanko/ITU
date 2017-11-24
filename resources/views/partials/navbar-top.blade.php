@@ -7,21 +7,21 @@
 
         <div class="collapse navbar-collapse" id="navbarTop">
             <form class="form-inline">
-                <input class="form-control mr-2" type="text" placeholder="backup.docx">
-                <button class="btn btn-outline-success" type="submit">Vyhledat</button>
+                <select id="select2-keywords" class="form-control mr-2"></select>
+                <button class="btn btn-outline-success" type="submit"><i class="fal fa-search"></i> Vyhledat</button>
             </form>
             <ul class="navbar-nav ml-auto">
                 @if(Auth::check())
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('folder.index') }}">Mé soubory</a>
+                        <a class="nav-link" href="{{ route('folders.index') }}"><i class="fal fa-file-alt"></i> Mé soubory</a>
                     </li>
                     <li class="nav-item mr-2">
-                        <a class="nav-link" href="#">Skupiny a sdílení</a>
+                        <a class="nav-link" href="#"><i class="fal fa-users"></i> Skupiny a sdílení</a>
                     </li>
                     <li class="nav-item">
                         <form action="{{ route('logout') }}" method="POST">
                             {{ csrf_field() }}
-                            <button class="btn btn-primary" type="submit">Odhlásit</button>
+                            <button class="btn btn-primary" type="submit"><i class="fal fa-sign-out"></i>  Odhlásit</button>
                         </form>
                     </li>
                 @else

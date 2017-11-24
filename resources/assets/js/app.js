@@ -7,6 +7,9 @@
 
 require('./bootstrap');
 
+require('./fontawesome/light');
+require('./fontawesome/fontawesome');
+
 window.Holder = require('holderjs');
 
 window.S2 = require('select2');

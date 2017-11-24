@@ -20,6 +20,15 @@
 
         {{-- Scripts --}}
         <script src="/js/app.js"></script>
+        <script>
+            $('#select2-keywords').select2({
+                ajax: {
+                    url: '{{ route('keywords.index') }}',
+                    dataType: 'json',
+                },
+                placeholder: 'Search for a repository'
+            });
+        </script>
         @yield('scripts')
     </body>
 </html>

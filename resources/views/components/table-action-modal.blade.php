@@ -2,12 +2,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             @if($type == 'document')
-                <form action="{{ route('document.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data">
             @elseif($type == 'folderNew')
-                <form action="{{ route('folder.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('folders.store') }}" method="POST" enctype="multipart/form-data">
             @else
                 <form action="{{ $route }}" id="folderUpdate" method="POST" enctype="multipart/form-data">
-                {{ method_field('PUT') }}
             @endif
                 <div class="modal-header">
                     @if($type == 'document')
@@ -21,6 +20,9 @@
                 </div>
                 <div class="modal-body">
                     {{ csrf_field() }}
+                    @if($type == 'folderUpdate')
+                        {{ method_field('PUT') }}
+                    @endif
                     @if(isset($parentFolderId))
                         <input type="hidden" name="parent_id" value="{{ $parentFolderId }}">
                     @endif
@@ -51,11 +53,11 @@
                 </div>
                 <div class="modal-footer">
                     @if($type == 'document')
-                        <button type="submit" class="btn btn-primary">Nahrát</button>
+                        <button type="submit" class="btn btn-primary"><i class="fal fa-file-plus"></i> Nahrát</button>
                     @elseif($type == 'folderNew')
-                        <button type="submit" class="btn btn-primary">Vytvořit</button>
+                        <button type="submit" class="btn btn-primary"><i class="fal fa-plus"></i> Vytvořit</button>
                     @else
-                        <button type="submit" class="btn btn-primary">Přejmenovat</button>
+                        <button type="submit" class="btn btn-primary"><i class="fal fa-edit"></i> Přejmenovat</button>
                     @endif
                 </div>
             </form>

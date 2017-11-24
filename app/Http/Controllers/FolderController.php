@@ -39,7 +39,7 @@ class FolderController extends Controller
      * Also show the user groups he belongs to.
      *
      * @param Folder $folder
-     * @return @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function show(Folder $folder)
     {
@@ -67,7 +67,10 @@ class FolderController extends Controller
     public function store(Request $request)
     {
         if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
-            return back()->withInput();
+            return back()->with([
+                'statusType' => 'danger',
+                'statusText' => 'V adresáři již existuje složka se <strong>stejným</strong> názvem.'
+            ]);;
 
         $request->request->add(['owner_id' => Auth::user()->id]);
 
@@ -75,7 +78,10 @@ class FolderController extends Controller
 
         $route = $folder->parent == NULL ? 'index' : 'show';
 
-        return redirect()->route('folder.' . $route, $folder->parent);
+        return redirect()->route('folders.' . $route, $folder->parent)->with([
+            'statusType' => 'success',
+            'statusText' => 'Složka <strong>úspěšně</strong> vytvořena.'
+        ]);;
     }
 
     /**
@@ -88,12 +94,18 @@ class FolderController extends Controller
     public function update(Request $request, Folder $folder)
     {
         if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
-            return back()->withInput();
+            return back()->with([
+                'statusType' => 'danger',
+                'statusText' => 'V adresáři již existuje složka se <strong>stejným</strong> názvem.'
+            ]);
 
         $folder->name = $request->name;
         $folder->update();
 
-        return redirect()->back();
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusText' => 'Složka <strong>úspěšně</strong> přejmenována.'
+        ]);
     }
 
     /**
@@ -110,7 +122,10 @@ class FolderController extends Controller
         } else
             abort(401);
 
-        return redirect()->back();
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusText' => 'Složka a její obsah byl <strong>úspěšně</strong> odstraněn.'
+        ]);;
     }
 
     /**
