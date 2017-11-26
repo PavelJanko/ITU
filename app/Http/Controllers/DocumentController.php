@@ -11,6 +11,14 @@ use Illuminate\Validation\Rule;
 class DocumentController extends Controller
 {
     /**
+     * Instantiate a new document controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Store a newly created document in storage.
      *
      * @param  \Illuminate\Http\Request  $request

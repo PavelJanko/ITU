@@ -6,10 +6,10 @@
             @elseif($type == 'folderNew')
                 <form action="{{ route('folders.store') }}" method="POST" enctype="multipart/form-data">
             @else
-                <form action="{{ $route }}" id="folderUpdate" method="POST" enctype="multipart/form-data">
+                <form action="#" method="POST" enctype="multipart/form-data">
             @endif
                 <div class="modal-header">
-                    @if($type == 'document')
+                    @if($type == 'documentNew')
                         <h5 class="modal-title">Nahrání nového dokumentu</h5>
                     @elseif($type == 'folderNew')
                         <h5 class="modal-title">Vytvoření nové složky</h5>
@@ -29,15 +29,15 @@
                     @if($type == 'document')
                         <div class="form-row align-items-center">
                             <div class="col-3">
-                                <label class="mb-0" for="modalDocumentAbstract">Abstrakt:</label>
+                                <label class="mb-0" for="modalDocumentNewAbstract">Abstrakt:</label>
                             </div>
                             <div class="col-9">
-                                <textarea class="form-control" id="modalDocumentAbstract" name="abstract" rows="6"></textarea>
+                                <textarea class="form-control" id="modalDocumentNewAbstract" name="abstract" rows="6"></textarea>
                             </div>
                         </div>
                         <div class="form-row align-items-center justify-content-end mt-2">
                             <div class="col-9">
-                                <input type="file" class="form-control-file" id="modalDocument" name="document">
+                                <input type="file" class="form-control-file" id="modalDocumentNewFile" name="document">
                             </div>
                         </div>
                     @else

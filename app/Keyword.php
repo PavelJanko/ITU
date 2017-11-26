@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Keyword extends Model
@@ -14,6 +15,18 @@ class Keyword extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderScope());
+    }
 
     /**
      * Get the documents with a keyword.

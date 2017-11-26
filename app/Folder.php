@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,18 @@ class Folder extends Model
     protected $fillable = [
         'owner_id', 'parent_id', 'name',
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderScope());
+    }
 
     /**
      * Get the documents inside of a folder.

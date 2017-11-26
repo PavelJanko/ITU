@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
@@ -19,6 +20,18 @@ class Document extends Model implements HasMedia
     protected $fillable = [
         'owner_id', 'parent_id', 'name', 'extension', 'abstract',
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderScope());
+    }
 
     /**
      * Get the comments of a document.

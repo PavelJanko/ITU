@@ -81,7 +81,7 @@ class FolderController extends Controller
         return redirect()->route('folders.' . $route, $folder->parent)->with([
             'statusType' => 'success',
             'statusText' => 'Složka <strong>úspěšně</strong> vytvořena.'
-        ]);;
+        ]);
     }
 
     /**
@@ -125,7 +125,7 @@ class FolderController extends Controller
         return redirect()->back()->with([
             'statusType' => 'success',
             'statusText' => 'Složka a její obsah byl <strong>úspěšně</strong> odstraněn.'
-        ]);;
+        ]);
     }
 
     /**
@@ -142,5 +142,35 @@ class FolderController extends Controller
 
         foreach($folder->documents as $document)
             $document->delete();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     */
+    public function sharingEdit(Folder $folder)
+    {
+        return view('sharing.edit')->with([
+            'item' => $folder,
+            'itemGroupIds' => $folder->groups()->pluck('id'),
+            'ownerGroups' => Auth::user()->groups,
+            'pageTitle' => 'Upravení sdílení pro složku',
+            'type' => 'folder'
+        ]);
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     */
+    public function sharingUpdate(Request $request, Folder $folder)
+    {
+        $folder->groups()->sync($request->input('groups'));
+
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusText' => 'Složka a její obsah <strong>úspěšně</strong> nasdílen.'
+        ]);
     }
 }

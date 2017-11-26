@@ -1,6 +1,6 @@
-@component('components.table-action-modal', ['type' => 'document']) newDocument @endcomponent
-@component('components.table-action-modal', ['type' => 'folderNew']) newFolder @endcomponent
-@component('components.table-action-modal', ['type' => 'folderUpdate', 'route' => '#']) updateFolder @endcomponent
+@component('components.table-action-modal', ['type' => 'document']) modalDocumentNew @endcomponent
+@component('components.table-action-modal', ['type' => 'folderNew']) modalFolderNew @endcomponent
+@component('components.table-action-modal', ['type' => 'folderUpdate']) modalFolderUpdate @endcomponent
 @if(session('statusType') && session('statusText'))
     @component('components.flash-message')
         @slot('type') {{ session('statusType') }} @endslot
@@ -8,8 +8,8 @@
     @endcomponent
 @endif
 <div class="btn-group" role="group">
-    <button id="newDocumentButton" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newDocument"><i class="fal fa-file-plus"></i> Nahrát</button>
-    <button id="newFolderButton" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newFolder"><i class="fal fa-plus"></i> Nová složka</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalDocumentNew"><i class="fal fa-file-plus"></i> Nahrát</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalFolderNew"><i class="fal fa-plus"></i> Nová složka</button>
 </div>
 <table class="dashboard-table table table-hover">
     <thead>
@@ -28,14 +28,39 @@
 
 @section('scripts')
     <script>
-        setTimeout(
-            function() {
-                $('.alert').fadeOut();
-            }, 3000);
+        $(window).on('load', function() {
+            setTimeout(
+                function() {
+                    $('.alert').fadeOut();
+                }, 3000);
 
-        $('.folder-rename').click(function(e) {
-            e.preventDefault();
-            $('#folderUpdate').attr('action', $(e.target).attr('href'));
+            const modalFolderUpdate = $('#modalFolderUpdate');
+
+            $('.folder-rename').click(function(e) {
+                e.preventDefault();
+                modalFolderUpdate.modal();
+                if($(e.target).is('svg'))
+                    modalFolderUpdate.find('form').attr('action', $(e.target).parent().attr('href'));
+                else
+                    modalFolderUpdate.find('form').attr('action', $(e.target).attr('href'));
+            });
+
+            $('[data-toggle="tooltip"]').tooltip({
+                html: true,
+                placement: 'left'
+            });
+
+            $('#modalDocumentNew').on('shown.bs.modal', function() {
+                $('#modalDocumentNewAbstract').trigger('focus');
+            });
+
+            $('#modalFolderNew').on('shown.bs.modal', function() {
+                $('#modalFolderNewName').trigger('focus');
+            });
+
+            $('#modalFolderUpdate').on('shown.bs.modal', function() {
+                $('#modalFolderUpdateName').trigger('focus');
+            });
         });
     </script>
 @endsection

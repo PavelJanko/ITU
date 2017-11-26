@@ -49,9 +49,9 @@ class DatabaseSeeder extends Seeder
                         $rootFolder->parent_id = NULL;
                         $rootFolder->update();
                     }
-                }
 
-                $folder->update();
+                    $folder->update();
+                }
             }
         }
 

@@ -13,10 +13,10 @@
             <ul class="navbar-nav ml-auto">
                 @if(Auth::check())
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('folders.index') }}"><i class="fal fa-file-alt"></i> Mé soubory</a>
+                        <a class="nav-link" href="{{ route('folders.index') }}"><i class="fal fa-folder-open"></i> Mé soubory</a>
                     </li>
                     <li class="nav-item mr-2">
-                        <a class="nav-link" href="#"><i class="fal fa-users"></i> Skupiny a sdílení</a>
+                        <a class="nav-link" href="{{ route('groups.index') }}"><i class="fal fa-users"></i> Skupiny a sdílení</a>
                     </li>
                     <li class="nav-item">
                         <form action="{{ route('logout') }}" method="POST">

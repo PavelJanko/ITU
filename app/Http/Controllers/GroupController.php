@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
+    /**
+     * Instantiate a new group controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +23,27 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $documents = collect();
+        $folders = collect();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        Auth::user()->groups()->each(function($item) use ($documents) {
+            $documents->push($item->documents);
+        });
+
+        Auth::user()->groups()->each(function($item) use ($folders) {
+            $folders->push($item->folders);
+        });
+
+        $documents = $documents->collapse()->where('owner_id', '<>', Auth::id())->sortBy('name');
+        $folders = $folders->collapse()->where('owner_id', '<>', Auth::id())->sortBy('name');
+        $groups = Auth::user()->groups();
+
+        return view('dashboard.index2')->with([
+            'documents' => $documents,
+            'folders' => $folders,
+            'groups' => $groups,
+            'pageTitle' => 'Skupiny a sdílení'
+        ]);
     }
 
     /**
@@ -35,7 +54,14 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->request->add(['creator_id' => Auth::user()->id]);
+
+        Group::create($request->only(['creator_id', 'name']));
+
+        return redirect()->back()->with([
+           'statusType' => 'success',
+           'statusText' => 'Skupina byla <strong>úspěšně</strong> vytvořena.'
+        ]);
     }
 
     /**
@@ -45,17 +71,6 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Group $group)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Group $group)
     {
         //
     }
@@ -80,6 +95,14 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+        if($group != NULL && $group->creator_id == Auth::user()->id)
+            $group->delete();
+        else
+            abort(401);
+
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusText' => 'Skupina byla <strong>úspěšně</strong> odstraněna.'
+        ]);
     }
 }
