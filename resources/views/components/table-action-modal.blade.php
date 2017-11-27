@@ -23,8 +23,8 @@
                     @if($type == 'folderUpdate')
                         {{ method_field('PUT') }}
                     @endif
-                    @if(isset($parentFolderId))
-                        <input type="hidden" name="parent_id" value="{{ $parentFolderId }}">
+                    @if(isset($parentFolder->id))
+                        <input type="hidden" name="parent_id" value="{{ $parentFolderId->id }}">
                     @endif
                     @if($type == 'document')
                         <div class="form-row align-items-center">

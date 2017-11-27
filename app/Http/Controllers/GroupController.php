@@ -34,8 +34,9 @@ class GroupController extends Controller
             $folders->push($item->folders);
         });
 
-        $documents = $documents->collapse()->where('owner_id', '<>', Auth::id())->sortBy('name');
-        $folders = $folders->collapse()->where('owner_id', '<>', Auth::id())->sortBy('name');
+
+        $documents = $documents->collapse()->where('owner_id', '<>', Auth::id())->unique('id')->sortBy('name');
+        $folders = $folders->collapse()->where('owner_id', '<>', Auth::id())->unique('id')->sortBy('name');
         $groups = Auth::user()->groups();
 
         return view('dashboard.index2')->with([
@@ -54,7 +55,7 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        $request->request->add(['creator_id' => Auth::user()->id]);
+        $request->request->add(['creator_id' => Auth::id()]);
 
         Group::create($request->only(['creator_id', 'name']));
 
@@ -95,7 +96,7 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        if($group != NULL && $group->creator_id == Auth::user()->id)
+        if($group != NULL && $group->creator_id == Auth::id())
             $group->delete();
         else
             abort(401);

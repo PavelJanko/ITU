@@ -68,6 +68,36 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class);
     }
 
+    public function canAccessDocument(Document $document)
+    {
+        if($document->owner->id == $this->id)
+            return true;
+
+        foreach($document->groups as $group)
+            if($this->groups->contains($group))
+                return true;
+
+        if($document->parent != NULL)
+            return $this->canAccessFolder($document->parent);
+        else
+            return false;
+    }
+
+    public function canAccessFolder(Folder $folder)
+    {
+        if($folder->owner->id == $this->id)
+            return true;
+
+        foreach($folder->groups as $group)
+            if($this->groups->contains($group))
+                return true;
+
+        if($folder->parent != NULL)
+            return $this->canAccessFolder($folder->parent);
+        else
+            return false;
+    }
+
     /**
      * Restrict the columns for indexing the database.
      *

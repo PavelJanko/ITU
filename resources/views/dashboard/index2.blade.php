@@ -18,18 +18,22 @@
             </thead>
             <tbody>
                 @foreach($folders as $folder)
-                    <tr>
-                        <td><i class="fal fa-folder"></i> <a href="{{ route('folders.show', $folder->slug) }}">{{ $folder->name }}</a></td>
-                        <td>Složka</td>
-                        <td>{{ $folder->owner->name }}</td>
-                    </tr>
+                    @if(!$folders->pluck('id')->contains($folder->parent_id))
+                        <tr>
+                            <td><i class="fal fa-folder"></i> <a href="{{ route('folders.show', $folder->slug) }}">{{ $folder->name }}</a></td>
+                            <td>Složka</td>
+                            <td>{{ $folder->owner->name }}</td>
+                        </tr>
+                    @endif
                 @endforeach
                 @foreach($documents as $document)
-                    <tr>
-                        <td><a href="{{ route('documents.show', $document->slug) }}">{{ $document->name }}</a></td>
-                        <td>{{ $document->extension }}</td>
-                        <td>{{ $document->owner->name }}</td>
-                    </tr>
+                    @if(!$folders->pluck('id')->contains($document->parent_id))
+                        <tr>
+                            <td><a href="{{ route('documents.show', $document->slug) }}"><i class="fal fa-file-alt"></i> {{ $document->name }}</a></td>
+                            <td>{{ $document->extension }}</td>
+                            <td>{{ $document->owner->name }}</td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>

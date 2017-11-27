@@ -14,6 +14,8 @@ window.Holder = require('holderjs');
 
 window.S2 = require('select2');
 
+window.swal = require('sweetalert2');
+
 window.Vue = require('vue');
 
 import InstantSearch from 'vue-instantsearch';

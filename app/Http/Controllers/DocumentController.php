@@ -30,11 +30,12 @@ class DocumentController extends Controller
 
         if(Document::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
             return back()->with([
-                'statusType' => 'danger',
-                'statusText' => 'V adresáři již existuje dokument se <strong>stejným</strong> názvem.'
+                'statusType' => 'error',
+                'statusTitle' => 'Jejda!',
+                'statusText' => 'V adresáři již existuje dokument se stejným názvem.'
             ]);;
 
-        $request->request->add(['owner_id' => Auth::user()->id]);
+        $request->request->add(['owner_id' => Auth::id()]);
 
         $extension = $request->document->extension();
         $request->request->add(['extension' => $extension != NULL ? $extension : '?']);
@@ -46,7 +47,8 @@ class DocumentController extends Controller
 
         return redirect()->route('folders.' . $route, $document->parent)->with([
             'statusType' => 'success',
-            'statusText' => 'Dokument <strong>úspěšně</strong> nahrán.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Dokument úspěšně nahrán.'
         ]);
     }
 
@@ -59,7 +61,7 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        if(Auth::user()->id != $document->owner->id)
+        if($document == NULL || !Auth::user()->canAccessDocument($document))
             abort(401);
 
         return view('documents.show')->with([
@@ -76,14 +78,15 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
-        if($document != NULL && $document->owner_id == Auth::user()->id)
+        if($document != NULL && $document->owner_id == Auth::id())
             $document->delete();
         else
             abort(401);
         
         return redirect()->back()->with([
             'statusType' => 'success',
-            'statusText' => 'Dokument <strong>úspěšně</strong> odstraněn.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Dokument úspěšně odstraněn.'
         ]);;
     }
 
@@ -95,7 +98,7 @@ class DocumentController extends Controller
      */
     public function download(Document $document)
     {
-        if(Auth::user()->id == $document->owner_id)
+        if($document != NULL && $document->owner_id == Auth::id())
             return response()->download($document->getMedia()->first()->getPath());
 
         abort(404);

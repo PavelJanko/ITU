@@ -43,18 +43,17 @@ class FolderController extends Controller
      */
     public function show(Folder $folder)
     {
-        if(Auth::user()->id == $folder->owner->id) {
-            $documents = $folder->documents;
-            $folders = $folder->folders;
-            $parentFolder = $folder;
-        } else
+        $documents = $folder->documents;
+        $folders = $folder->folders;
+
+        if($folder == NULL || !Auth::user()->canAccessFolder($folder))
             abort(401);
 
         return view('dashboard.index')->with([
             'documents' => $documents,
             'folders' => $folders,
             'pageTitle' => 'Mé soubory',
-            'parentFolderId' => $folder->id
+            'parentFolder' => $folder
         ]);
     }
 
@@ -68,11 +67,12 @@ class FolderController extends Controller
     {
         if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
             return back()->with([
-                'statusType' => 'danger',
-                'statusText' => 'V adresáři již existuje složka se <strong>stejným</strong> názvem.'
+                'statusType' => 'error',
+                'statusTitle' => 'Jejda!',
+                'statusText' => 'V adresáři již existuje složka se stejným názvem.'
             ]);;
 
-        $request->request->add(['owner_id' => Auth::user()->id]);
+        $request->request->add(['owner_id' => Auth::id()]);
 
         $folder = Folder::create($request->only(['owner_id', 'parent_id', 'name']));
 
@@ -80,7 +80,8 @@ class FolderController extends Controller
 
         return redirect()->route('folders.' . $route, $folder->parent)->with([
             'statusType' => 'success',
-            'statusText' => 'Složka <strong>úspěšně</strong> vytvořena.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Složka úspěšně vytvořena.'
         ]);
     }
 
@@ -95,8 +96,9 @@ class FolderController extends Controller
     {
         if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
             return back()->with([
-                'statusType' => 'danger',
-                'statusText' => 'V adresáři již existuje složka se <strong>stejným</strong> názvem.'
+                'statusType' => 'error',
+                'statusTitle' => 'Jejda!',
+                'statusText' => 'V adresáři již existuje složka se stejným názvem.'
             ]);
 
         $folder->name = $request->name;
@@ -104,7 +106,8 @@ class FolderController extends Controller
 
         return redirect()->back()->with([
             'statusType' => 'success',
-            'statusText' => 'Složka <strong>úspěšně</strong> přejmenována.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Složka úspěšně přejmenována.'
         ]);
     }
 
@@ -116,7 +119,7 @@ class FolderController extends Controller
      */
     public function destroy(Folder $folder)
     {
-        if($folder != NULL && $folder->owner_id == Auth::user()->id) {
+        if($folder != NULL && $folder->owner_id == Auth::id()) {
             $this->mediaDelete($folder);
             $folder->delete();
         } else
@@ -124,7 +127,8 @@ class FolderController extends Controller
 
         return redirect()->back()->with([
             'statusType' => 'success',
-            'statusText' => 'Složka a její obsah byl <strong>úspěšně</strong> odstraněn.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Složka i její obsah byl úspěšně odstraněn.'
         ]);
     }
 
@@ -170,7 +174,8 @@ class FolderController extends Controller
 
         return redirect()->back()->with([
             'statusType' => 'success',
-            'statusText' => 'Složka a její obsah <strong>úspěšně</strong> nasdílen.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Složka i její obsah úspěšně nasdílen.'
         ]);
     }
 }

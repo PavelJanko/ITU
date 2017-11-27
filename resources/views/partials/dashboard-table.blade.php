@@ -1,12 +1,6 @@
 @component('components.table-action-modal', ['type' => 'document']) modalDocumentNew @endcomponent
 @component('components.table-action-modal', ['type' => 'folderNew']) modalFolderNew @endcomponent
 @component('components.table-action-modal', ['type' => 'folderUpdate']) modalFolderUpdate @endcomponent
-@if(session('statusType') && session('statusText'))
-    @component('components.flash-message')
-        @slot('type') {{ session('statusType') }} @endslot
-        {!! session('statusText') !!}
-    @endcomponent
-@endif
 <div class="btn-group" role="group">
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalDocumentNew"><i class="fal fa-file-plus"></i> Nahrát</button>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalFolderNew"><i class="fal fa-plus"></i> Nová složka</button>
@@ -16,8 +10,12 @@
     <tr>
         <th scope="col">Název</th>
         <th scope="col">Přípona</th>
-        <th scope="col">Čas přidání</th>
-        <th scope="col">Akce</th>
+        @if(isset($parentFolder) && $parentFolder->owner->id != Auth::id())
+            <th scope="col">Vlastník</th>
+        @else
+            <th scope="col">Čas přidání</th>
+            <th scope="col">Akce</th>
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -29,10 +27,9 @@
 @section('scripts')
     <script>
         $(window).on('load', function() {
-            setTimeout(
-                function() {
-                    $('.alert').fadeOut();
-                }, 3000);
+            @if(session('statusType') && session('statusTitle') && session('statusText'))
+                swal('{{ session('statusTitle') }}', '{{ session('statusText') }}', '{{ session('statusType') }}');
+            @endif
 
             const modalFolderUpdate = $('#modalFolderUpdate');
 
@@ -63,4 +60,4 @@
             });
         });
     </script>
-@endsection
+@append
