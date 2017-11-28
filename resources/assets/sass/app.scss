@@ -10,13 +10,18 @@ $tooltip-padding-y: 8px;
 
 @import "~bootstrap/scss/bootstrap";
 
-.modal-header .close {
-  padding: $modal-header-padding + 3px;
-}
-
 .dashboard-table td {
   padding: 0.5rem;
   vertical-align: middle;
+}
+
+.flex-column .nav-link > .badge {
+  float: right;
+  margin-top: 0.15rem;
+}
+
+.modal-header .close {
+  padding: $modal-header-padding + 3px;
 }
 
 // Select2

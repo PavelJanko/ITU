@@ -9717,13 +9717,18 @@ a.text-dark:hover {
   visibility: hidden !important;
 }
 
-.modal-header .close {
-  padding: 18px;
-}
-
 .dashboard-table td {
   padding: 0.5rem;
   vertical-align: middle;
+}
+
+.flex-column .nav-link > .badge {
+  float: right;
+  margin-top: 0.15rem;
+}
+
+.modal-header .close {
+  padding: 18px;
 }
 
 .select2-container {

@@ -73,7 +73,28 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
+        $documents = $group->documents()->where('owner_id', '<>', Auth::id())->get()->sortBy('name');
+        $folders = $group->folders()->where('owner_id', '<>', Auth::id())->get()->sortBy('name');
+        $groups = Auth::user()->groups();
+
+        return view('dashboard.index2')->with([
+            'documents' => $documents,
+            'folders' => $folders,
+            'groups' => $groups,
+            'pageTitle' => 'Sdílení skupiny ' . $group->name
+        ]);
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Group  $group
+     * @return \Illuminate\Http\Response
+     */
+    public function edit()
+    {
+        return 'test';
     }
 
     /**
