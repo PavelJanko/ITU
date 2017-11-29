@@ -154,9 +154,9 @@ class FolderController extends Controller
      */
     public function sharingEdit(Folder $folder)
     {
-        return view('sharing.edit')->with([
+        return view('folder.sharing-edit')->with([
             'item' => $folder,
-            'itemGroupIds' => $folder->groups()->pluck('id'),
+            'itemGroups' => $folder->groups,
             'ownerGroups' => Auth::user()->groups,
             'pageTitle' => 'Upravení sdílení pro složku',
             'type' => 'folder'

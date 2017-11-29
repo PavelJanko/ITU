@@ -6,7 +6,6 @@ use App\Document;
 use App\Keyword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class DocumentController extends Controller
 {
@@ -102,5 +101,20 @@ class DocumentController extends Controller
             return response()->download($document->getMedia()->first()->getPath());
 
         abort(404);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     */
+    public function sharingEdit(Document $document)
+    {
+        return view('folder.sharing-edit')->with([
+            'item' => $document,
+            'itemGroups' => $document->groups,
+            'ownerGroups' => Auth::user()->groups,
+            'pageTitle' => 'Upravení sdílení pro soubor',
+            'type' => 'document'
+        ]);
     }
 }

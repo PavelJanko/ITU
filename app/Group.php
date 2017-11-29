@@ -28,6 +28,11 @@ class Group extends Model
         static::addGlobalScope(new OrderScope());
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
+
     /**
      * Get the documents that the members of a group can access.
      *

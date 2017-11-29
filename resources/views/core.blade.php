@@ -18,8 +18,9 @@
             @yield('layout')
         </div>
 
-        {{-- Scripts --}}
-        <script src="/js/app.js"></script>
-        @yield('scripts')
+        @section('scripts')
+            {{-- Scripts --}}
+            <script src="/js/app.js"></script>
+        @show
     </body>
 </html>

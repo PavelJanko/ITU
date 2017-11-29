@@ -1,10 +1,10 @@
 @if(isset($parentFolder) && $parentFolder->owner->id != Auth::id())
-    <a class="btn btn-secondary" href="{{ route('groups.edit') }}" role="button"><i class="fal fa-list"></i> Spravovat skupiny</a>
     <div class="row">
         <div class="col-3">
             @include('partials.sharing-nav')
         </div>
         <div class="col-9">
+            <a class="btn btn-secondary" href="{{ route('groups.edit') }}" role="button"><i class="fal fa-list"></i> Spravovat skupiny</a>
 @else
     @component('components.table-action-modal', ['type' => 'document']) modalDocumentNew @endcomponent
     @component('components.table-action-modal', ['type' => 'folderNew']) modalFolderNew @endcomponent
@@ -38,6 +38,7 @@
 @endif
 
 @section('scripts')
+    @parent
     <script>
         $(window).on('load', function() {
             @if(session('statusType') && session('statusTitle') && session('statusText'))
@@ -73,4 +74,4 @@
             });
         });
     </script>
-@append
+@endsection

@@ -94,7 +94,10 @@ class GroupController extends Controller
      */
     public function edit()
     {
-        return 'test';
+        return view('groups.edit')->with([
+            'groups' => Auth::user()->groups,
+            'pageTitle' => 'Správa skupin'
+        ]);
     }
 
     /**
