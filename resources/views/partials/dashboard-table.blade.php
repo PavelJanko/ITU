@@ -45,33 +45,57 @@
                 swal('{{ session('statusTitle') }}', '{{ session('statusText') }}', '{{ session('statusType') }}');
             @endif
 
-            const modalFolderUpdate = $('#modalFolderUpdate');
+            const modalFolderUpdateId = $('#modalFolderUpdateId');
+
+            $('.document-delete, .folder-delete').click(function(e) {
+                e.preventDefault();
+
+                swal({
+                    title: 'Pozor!',
+                    text: "Jste si jisti, že chcete položku odstranit?",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ano',
+                    cancelButtonText: 'Ne'
+                }).then((result) => {
+                    if(result.value) {
+                        $(e.target).parent().submit();
+                    }
+                });
+
+                if($(e.target).is('svg'))
+                    modalFolderUpdateId.find('form').attr('action', $(e.target).parent().attr('href'));
+                else
+                    modalFolderUpdateId.find('form').attr('action', $(e.target).attr('href'));
+            });
 
             $('.folder-rename').click(function(e) {
                 e.preventDefault();
-                modalFolderUpdate.modal();
+
+                modalFolderUpdateId.modal();
+
                 if($(e.target).is('svg'))
-                    modalFolderUpdate.find('form').attr('action', $(e.target).parent().attr('href'));
+                    modalFolderUpdateId.find('form').attr('action', $(e.target).parent().attr('href'));
                 else
-                    modalFolderUpdate.find('form').attr('action', $(e.target).attr('href'));
+                    modalFolderUpdateId.find('form').attr('action', $(e.target).attr('href'));
             });
 
             $('[data-toggle="tooltip"]').tooltip({
                 html: true,
                 placement: 'left'
             });
-
-            $('#modalDocumentNew').on('shown.bs.modal', function() {
-                $('#modalDocumentNewAbstract').trigger('focus');
-            });
-
-            $('#modalFolderNew').on('shown.bs.modal', function() {
-                $('#modalFolderNewName').trigger('focus');
-            });
-
-            $('#modalFolderUpdate').on('shown.bs.modal', function() {
-                $('#modalFolderUpdateName').trigger('focus');
-            });
+            
+            var triggerModalFocus = function(modalId, inputId) {
+                $(modalId).on('shown.bs.modal', function() {
+                    $(inputId).trigger('focus');
+                });
+            };
+            
+            triggerModalFocus('#modalDocumentNew', '#modalDocumentNewAbstract');
+            triggerModalFocus('#modalFolderNew', '#modalFolderNewName');
+            triggerModalFocus(modalFolderUpdateId, '#modalFolderUpdateIdName');
         });
     </script>
 @endsection

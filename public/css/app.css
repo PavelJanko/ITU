@@ -9717,7 +9717,7 @@ a.text-dark:hover {
   visibility: hidden !important;
 }
 
-.dashboard-table td {
+.table td {
   padding: 0.5rem;
   vertical-align: middle;
 }
