@@ -26,18 +26,14 @@ Zaměřte se a navrhněte inovativní způsob interakce. Toto řešení implemen
 ### Postup instalace:
 Ve **složce s projektem** proveďte:
 ```bash
-# Zkopírovat soubor prostředí a následně jej upravit
-$ cp .env.example .env
 # Stažení back-end závislostí
 $ composer install
-# Vygenerování klíče použitého pro šifrování například uživatelských hesel
-$ php artisan key:generate
-# Migrace a populace databáze testovacími daty
+# Migrace a populace databáze testovacími daty (před tím vytvořte databázi)
 $ php artisan migrate --seed
 # Vytvoření symbolického odkazu pro uložiště
 $ php artisan storage:link
-# Stažení front-end závislostí
+# Stažení front-end závislostí (místo Yarnu lze použít npm)
 $ yarn
 # Kompilace front-end závislostí
-$ yarn run development
+$ yarn run production
 ```
