@@ -21,6 +21,17 @@
         @section('scripts')
             {{-- Scripts --}}
             <script src="/js/app.js"></script>
+            <script>
+                @if(session('statusType') && session('statusTitle') && session('statusText'))
+                    swal('{{ session('statusTitle') }}', '{{ session('statusText') }}', '{{ session('statusType') }}');
+                @endif
+
+                var triggerModalFocus = function(modalId, inputId) {
+                    $(modalId).on('shown.bs.modal', function() {
+                        $(inputId).trigger('focus');
+                    });
+                };
+            </script>
         @show
     </body>
 </html>

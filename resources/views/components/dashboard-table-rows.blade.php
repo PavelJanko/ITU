@@ -24,14 +24,14 @@
                                 <form action="{{ route('folders.destroy', $item->slug) }}" method="POST">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
-                                    <a class="folder-delete dropdown-item" href="#"><i class="fal fa-times-square"></i> Odstranit</a>
+                                    <a class="dialog-delete dropdown-item" href="#"><i class="fal fa-times-square"></i> Odstranit</a>
                                 </form>
                                 <a class="dropdown-item folder-rename" href="{{ route('folders.update', $item->slug) }}"><i class="fal fa-edit"></i> Přejmenovat</a>
                             @else
                                 <form action="{{ route('documents.destroy', $item->slug) }}" method="POST">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
-                                    <a class="document-delete dropdown-item" href="#"><i class="fal fa-file-times"></i> Odstranit</a>
+                                    <a class="dialog-delete dropdown-item" href="#"><i class="fal fa-file-times"></i> Odstranit</a>
                                 </form>
                                 <a class="dropdown-item" href="{{ route('documents.download', $item->slug) }}"><i class="fal fa-download"></i> Stáhnout</a>
                             @endif

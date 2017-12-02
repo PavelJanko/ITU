@@ -1,20 +1,18 @@
 <div class="modal fade" id="{{ $slot }}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            @if($type == 'document')
-                <form action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data">
-            @elseif($type == 'folderNew')
-                <form action="{{ route('folders.store') }}" method="POST" enctype="multipart/form-data">
-            @else
-                <form action="#" method="POST" enctype="multipart/form-data">
-            @endif
+            <form action="{{ isset($route) ? $route : '#' }}" method="POST"{{ $type == 'document' ? ' enctype="multipart/form-data"' : '' }}>
                 <div class="modal-header">
                     @if($type == 'documentNew')
                         <h5 class="modal-title">Nahrání nového dokumentu</h5>
                     @elseif($type == 'folderNew')
                         <h5 class="modal-title">Vytvoření nové složky</h5>
-                    @else
+                    @elseif($type == 'folderUpdate')
                         <h5 class="modal-title">Upravení názvu složky</h5>
+                    @elseif($type == 'groupNew')
+                        <h5 class="modal-title">Vytvoření nové skupiny</h5>
+                    @else
+                        <h5 class="modal-title">Přidání nového člena</h5>
                     @endif
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -40,13 +38,22 @@
                                 <input type="file" class="form-control-file" id="modalDocumentNewFile" name="document">
                             </div>
                         </div>
+                    @elseif($type == 'memberNew')
+                        <div class="form-row align-items-center">
+                            <div class="col-3">
+                                <label class="mb-0" for="modal{{ ucfirst($type) }}Email">Email:</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="email" class="form-control" id="modal{{ ucfirst($type) }}Email" name="email" placeholder="{{ isset($placeholder) ? $placeholder : '' }}">
+                            </div>
+                        </div>
                     @else
                         <div class="form-row align-items-center">
                             <div class="col-3">
                                 <label class="mb-0" for="modal{{ ucfirst($type) }}Name">Název:</label>
                             </div>
                             <div class="col-9">
-                                <input type="text" class="form-control" id="modal{{ ucfirst($type) }}Name" name="name" placeholder="Nová složka">
+                                <input type="text" class="form-control" id="modal{{ ucfirst($type) }}Name" name="name" placeholder="{{ isset($placeholder) ? $placeholder : '' }}">
                             </div>
                         </div>
                     @endif
@@ -54,10 +61,12 @@
                 <div class="modal-footer">
                     @if($type == 'document')
                         <button type="submit" class="btn btn-primary"><i class="fal fa-file-plus"></i> Nahrát</button>
-                    @elseif($type == 'folderNew')
+                    @elseif($type == 'folderNew' || $type == 'groupNew')
                         <button type="submit" class="btn btn-primary"><i class="fal fa-plus"></i> Vytvořit</button>
-                    @else
+                    @elseif($type == 'folderUpdate')
                         <button type="submit" class="btn btn-primary"><i class="fal fa-edit"></i> Přejmenovat</button>
+                    @else
+                        <button type="submit" class="btn btn-primary"><i class="fal fa-user-plus"></i> Přidat</button>
                     @endif
                 </div>
             </form>

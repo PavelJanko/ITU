@@ -175,7 +175,7 @@ class FolderController extends Controller
         return redirect()->back()->with([
             'statusType' => 'success',
             'statusTitle' => 'Úspěch!',
-            'statusText' => 'Složka i její obsah úspěšně nasdílen.'
+            'statusText' => 'Sdílení pro složku i její obsah úspěšně upraveno.'
         ]);
     }
 }

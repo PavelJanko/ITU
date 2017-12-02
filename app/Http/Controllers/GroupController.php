@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,11 +58,13 @@ class GroupController extends Controller
     {
         $request->request->add(['creator_id' => Auth::id()]);
 
-        Group::create($request->only(['creator_id', 'name']));
+        $group = Group::create($request->only(['creator_id', 'name']));
+        $group->members()->attach(Auth::id());
 
         return redirect()->back()->with([
-           'statusType' => 'success',
-           'statusText' => 'Skupina byla <strong>úspěšně</strong> vytvořena.'
+            'statusType' => 'success',
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Skupina byla úspěšně vytvořena.'
         ]);
     }
 
@@ -85,12 +88,10 @@ class GroupController extends Controller
         ]);
     }
 
-
     /**
-     * Display the specified resource.
+     * Display the form for editing the specified group.
      *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
+     * @return $this
      */
     public function edit()
     {
@@ -101,7 +102,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified group in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Group  $group
@@ -109,7 +110,26 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        //
+        if($group != NULL && $group->creator_id == Auth::id()) {
+            $syncResult = $group->members()->sync($request->input('members'));
+
+            foreach($syncResult['detached'] as $detached) {
+                if($detached != $group->creator_id) {
+                    $group->documents()->detach(User::find($detached)->documents->pluck('id'));
+                    $group->folders()->detach(User::find($detached)->folders->pluck('id'));
+                }
+            }
+
+            $group->members()->attach($group->creator_id);
+
+            return redirect()->back()->with([
+                'statusType' => 'success',
+                'statusTitle' => 'Úspěch!',
+                'statusText' => 'Seznam členů úspěšně upraven.'
+            ]);
+        }
+
+        abort(404);
     }
 
     /**
@@ -123,11 +143,78 @@ class GroupController extends Controller
         if($group != NULL && $group->creator_id == Auth::id())
             $group->delete();
         else
-            abort(401);
+            abort(404);
 
         return redirect()->back()->with([
             'statusType' => 'success',
-            'statusText' => 'Skupina byla <strong>úspěšně</strong> odstraněna.'
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Skupina byla úspěšně odstraněna.'
+        ]);
+    }
+
+    public function addMember(Request $request, Group $group)
+    {
+        if($group != NULL && $group->creator_id == Auth::id() && $request->email != Auth::user()->email) {
+            $newMember = User::where('email', $request->input('email'))->first();
+
+            if($newMember == NULL)
+                return redirect()->back()->with([
+                    'statusType' => 'error',
+                    'statusTitle' => 'Jejda!',
+                    'statusText' => 'Uživatel s touto e-mailovou adresou neexistuje.'
+                ]);
+
+            $group->members()->attach($newMember);
+
+            return redirect()->back()->with([
+                'statusType' => 'success',
+                'statusTitle' => 'Úspěch!',
+                'statusText' => 'Uživatel byl úspěšně přidán.'
+            ]);
+        }
+
+        abort(401);
+    }
+
+    public function editMembers(Group $group)
+    {
+        if($group != NULL && $group->creator_id == Auth::id())
+            return view('groups.edit-members')->with([
+                'group' => $group,
+                'pageTitle' => 'Upravení členů skupiny'
+            ]);
+        else
+            abort(404);
+    }
+
+    /**
+     * Detach a user from the specified group.
+     *
+     * @param  \App\Group  $group
+     * @return \Illuminate\Http\Response
+     */
+    public function leave(Group $group)
+    {
+        if($group != NULL && $group->members->pluck('id')->contains(Auth::id())) {
+            $group->members()->detach(Auth::id());
+            $group->load('members');
+
+            if($group->creator_id == Auth::id()) {
+                if ($group->members->count() > 0) {
+                    $group->creator_id = $group->members->first()->id;
+                    $group->documents()->detach(Auth::user()->documents->pluck('id'));
+                    $group->folders()->detach(Auth::user()->folders->pluck('id'));
+                    $group->update();
+                } else
+                    $group->delete();
+            }
+        } else
+            abort(404);
+
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Skupina byla úspěšně opuštěna.'
         ]);
     }
 }

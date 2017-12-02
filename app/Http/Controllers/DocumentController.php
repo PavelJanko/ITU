@@ -117,4 +117,15 @@ class DocumentController extends Controller
             'type' => 'document'
         ]);
     }
+
+    public function sharingUpdate(Request $request, Document $document)
+    {
+        $document->groups()->sync($request->input('groups'));
+
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Sdílení pro dokument úspěšně upraveno.'
+        ]);
+    }
 }

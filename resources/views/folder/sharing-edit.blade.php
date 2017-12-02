@@ -13,7 +13,7 @@
             </div>
         @endforeach
         <small class="form-text text-muted mt-0 mb-2">Zaškrtněte skupiny, se kterými chcete položku sdílet</small>
-        <button type="submit" class="btn btn-primary">Sdílet</button>
-        <a class="btn btn-link" href="{{ route('password.request') }}">Vytvořit novou skupinu</a>
+        <button type="submit" class="btn btn-primary">Upravit sdílení</button>
+        <a class="btn btn-link" href="{{ route('groups.edit') }}">Vytvořit novou skupinu</a>
     </form>
 @endsection

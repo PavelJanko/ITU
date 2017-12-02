@@ -22,6 +22,9 @@ Route::resource('folders', 'FolderController', ['except' => ['index', 'create', 
 Route::get('folders/{folder}/sharing', 'FolderController@sharingEdit')->name('folder.sharingEdit');
 Route::post('folders/{folder}/sharing', 'FolderController@sharingUpdate')->name('folder.sharingUpdate');
 Route::get('groups/edit', 'GroupController@edit')->name('groups.edit');
+Route::post('groups/{group}/add-member', 'GroupController@addMember')->name('groups.addMember');
+Route::get('groups/{group}/edit-members', 'GroupController@editMembers')->name('groups.editMembers');
+Route::get('groups/{group}/leave', 'GroupController@leave')->name('groups.leave');
 Route::resource('groups', 'GroupController', ['except' => ['index', 'create', 'edit']]);
 Route::get('keywords', 'KeywordController@index')->name('keywords.index');
 Route::get('sharing', 'GroupController@index')->name('groups.index');
