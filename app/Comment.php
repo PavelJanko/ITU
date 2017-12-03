@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -12,8 +13,20 @@ class Comment extends Model
      * @var array
      */
     protected $fillable = [
-        'author_id', 'body',
+        'author_id', 'document_id', 'body',
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderScope('created_at', 'desc'));
+    }
 
     /**
      * Get the author of a comment.

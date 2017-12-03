@@ -97,7 +97,7 @@ class DocumentController extends Controller
      */
     public function download(Document $document)
     {
-        if($document != NULL && $document->owner_id == Auth::id())
+        if($document != NULL && Auth::user()->canAccessDocument($document))
             return response()->download($document->getMedia()->first()->getPath());
 
         abort(404);

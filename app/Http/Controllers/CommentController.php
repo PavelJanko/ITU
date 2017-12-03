@@ -3,28 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Document;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $this->middleware('auth');
     }
 
     /**
@@ -35,7 +22,19 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $document = Document::find($request->input('document_id'));
+        $request->request->add(['author_id' => Auth::id()]);
+
+        if($document != NULL && Auth::user()->canAccessDocument($document))
+            Comment::create($request->only(['author_id', 'document_id', 'body']));
+        else
+            abort(404);
+
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Komentář úspěšně přidán.'
+        ]);
     }
 
     /**

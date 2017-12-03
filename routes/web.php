@@ -13,6 +13,7 @@
 
 Auth::routes();
 
+Route::resource('comments', 'CommentController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('documents', 'DocumentController', ['except' => ['index']]);
 Route::get('documents/{document}/download', 'DocumentController@download')->name('documents.download');
 Route::get('documents/{document}/sharing', 'DocumentController@sharingEdit')->name('document.sharingEdit');

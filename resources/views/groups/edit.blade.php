@@ -1,7 +1,7 @@
 @extends('layouts.basic')
 
 @section('content')
-    @component('components.table-action-modal', ['type' => 'groupNew']) modalGroupNew @endcomponent
+    @component('components.table-action-modal', ['placeholder' => 'Nová skupina', 'route' => route('groups.store'), 'type' => 'groupNew']) modalGroupNew @endcomponent
     <div class="container">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalGroupNew"><i class="fal fa-plus"></i> Nová skupina</button>
         <table class="table table-hover">

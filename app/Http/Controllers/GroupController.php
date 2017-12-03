@@ -164,7 +164,7 @@ class GroupController extends Controller
                     'statusText' => 'Uživatel s touto e-mailovou adresou neexistuje.'
                 ]);
 
-            $group->members()->attach($newMember);
+            $group->members()->syncWithoutDetaching($newMember);
 
             return redirect()->back()->with([
                 'statusType' => 'success',
