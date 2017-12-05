@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Importuji záznamy do indexu...');
         Artisan::call('scout:import', [
-            'model' => 'App\User',
+            'model' => 'App\Keyword',
         ]);
 
         $timeSpent = \Carbon\Carbon::now()->diffForHumans($timeStarted, true);

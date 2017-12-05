@@ -49,36 +49,23 @@ class CommentController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Remove the specified comment from storage.
      *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param Comment $comment
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function destroy(Comment $comment)
     {
-        //
+        if($comment != NULL && ($comment->author_id == Auth::id() || $comment->document->owner_id == Auth::id()))
+            $comment->delete();
+        else
+            abort(404);
+
+        return redirect()->back()->with([
+            'statusType' => 'success',
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Komentář úspěšně odstraněn.'
+        ]);
     }
 }

@@ -45,6 +45,6 @@ class Comment extends Model
      */
     public function document()
     {
-        return $this->belongsTo(User::class, 'document_id');
+        return $this->belongsTo(Document::class, 'document_id');
     }
 }

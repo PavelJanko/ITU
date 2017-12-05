@@ -6,3 +6,5 @@
 /storage/debugbar
 /vendor
 .env
+composer.lock
+yarn.lock

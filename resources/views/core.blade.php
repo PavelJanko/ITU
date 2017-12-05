@@ -31,6 +31,29 @@
                         $(inputId).trigger('focus');
                     });
                 };
+
+                $('#select2KeywordsNavbar').select2({
+                    ajax: {
+                        url: 'http://itu.app/keywords',
+                        dataType: 'json',
+                        data: function(params) {
+                            return {
+                                term: $.trim(params.term)
+                            }
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: data
+                            };
+                        },
+                    },
+                    language: 'cs',
+                    maximumSelectionLength: 3,
+                    minimumInputLength: 1,
+                    placeholder: 'Zadejte klíčová slova',
+                    theme: 'bootstrap',
+                    width: 'resolve'
+                });
             </script>
         @show
     </body>

@@ -42,6 +42,9 @@ class DocumentController extends Controller
         $document = Document::create($request->only(['owner_id', 'parent_id', 'name', 'extension', 'abstract']));
         $document->addMediaFromRequest('document')->toMediaCollection();
 
+        foreach($request->input('keywords') as $keyword)
+            $document->keywords()->attach(Keyword::firstOrCreate(['name' => $keyword]));
+
         $route = $document->parent == NULL ? 'index' : 'show';
 
         return redirect()->route('folders.' . $route, $document->parent)->with([
@@ -68,6 +71,37 @@ class DocumentController extends Controller
             'pageTitle' => $document->name,
         ]);
     }
+
+    public function edit(Document $document)
+    {
+        if($document == NULL || !Auth::user()->canAccessDocument($document))
+            abort(401);
+
+        return view('documents.edit')->with([
+            'document' => $document,
+            'pageTitle' => $document->name,
+        ]);
+    }
+
+    public function update(Document $document, Request $request)
+    {
+        if($document == NULL || !Auth::user()->canAccessDocument($document))
+            abort(401);
+
+        $document->abstract = $request->input('abstract');
+        $document->update();
+
+        $document->keywords()->sync([]);
+
+        foreach($request->input('keywords') as $keyword)
+            $document->keywords()->attach(Keyword::firstOrCreate(['name' => $keyword]));
+
+        return redirect()->route('documents.show', $document->slug)->with([
+            'statusType' => 'success',
+            'statusTitle' => 'Úspěch!',
+            'statusText' => 'Dokument úspěšně upraven.'
+        ]);
+    }
     
     /**
      * Remove the specified document from storage.
@@ -82,11 +116,11 @@ class DocumentController extends Controller
         else
             abort(401);
         
-        return redirect()->back()->with([
+        return redirect()->route('folders.index')->with([
             'statusType' => 'success',
             'statusTitle' => 'Úspěch!',
             'statusText' => 'Dokument úspěšně odstraněn.'
-        ]);;
+        ]);
     }
 
     /**
@@ -101,6 +135,18 @@ class DocumentController extends Controller
             return response()->download($document->getMedia()->first()->getPath());
 
         abort(404);
+    }
+
+    public function find(Request $request)
+    {
+        $documents = Document::whereHas('keywords', function($query) use ($request) {
+            $query->whereIn('name', $request->input('keywords'));
+        })->where('owner_id', Auth::id())->get();
+
+        return view('dashboard.index3')->with([
+            'documents' => $documents,
+            'pageTitle' => 'Vyhledávání podle klíčových slov'
+        ]);
     }
 
     /**

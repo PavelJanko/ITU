@@ -1,7 +1,7 @@
 <div class="modal fade" id="{{ $slot }}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{{ isset($route) ? $route : '#' }}" method="POST"{{ $type == 'document' ? ' enctype="multipart/form-data"' : '' }}>
+            <form action="{{ isset($route) ? $route : '#' }}" method="POST"{!! $type == 'document' ? ' enctype="multipart/form-data"' : '' !!}>
                 <div class="modal-header">
                     @if($type == 'documentNew')
                         <h5 class="modal-title">Nahrání nového dokumentu</h5>
@@ -22,7 +22,7 @@
                         {{ method_field('PUT') }}
                     @endif
                     @if(isset($parentFolder->id))
-                        <input type="hidden" name="parent_id" value="{{ $parentFolderId->id }}">
+                        <input type="hidden" name="parent_id" value="{{ $parentFolder->id }}">
                     @endif
                     @if($type == 'document')
                         <div class="form-row align-items-center">
@@ -31,6 +31,14 @@
                             </div>
                             <div class="col-9">
                                 <textarea class="form-control" id="modalDocumentNewAbstract" name="abstract" rows="6"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row align-items-center mt-2">
+                            <div class="col-3">
+                                <label class="mb-0" for="select2KeywordsModal">Klíčová slova:</label>
+                            </div>
+                            <div class="col-9">
+                                <select id="select2KeywordsModal" class="form-control" name="keywords[]" multiple="multiple" style="width: 100%;"></select>
                             </div>
                         </div>
                         <div class="form-row align-items-center justify-content-end mt-2">

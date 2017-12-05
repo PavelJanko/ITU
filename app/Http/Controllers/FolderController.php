@@ -94,7 +94,7 @@ class FolderController extends Controller
      */
     public function update(Request $request, Folder $folder)
     {
-        if(Folder::where('parent_id', $request->input('parent_id', NULL))->pluck('name')->contains($request->name))
+        if(Folder::where('parent_id', $request->input('parent_id'))->pluck('name')->contains($request->name))
             return back()->with([
                 'statusType' => 'error',
                 'statusTitle' => 'Jejda!',

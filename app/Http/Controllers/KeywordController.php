@@ -14,10 +14,20 @@ class KeywordController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax())
-            return response()->json(Keyword::all());
-        else
-            abort('404');
+//        if($request->ajax())
+        $term = trim(($request->input('term')));
+
+        if(empty($term))
+            return response()->json([]);
+
+        $keywords = Keyword::search($term)->get();
+
+        $formatted_keywords = [];
+        foreach ($keywords as $keyword) {
+            $formatted_keywords[] = ['id' => $keyword->name, 'text' => $keyword->name];
+        }
+
+        return response()->json($formatted_keywords);
     }
 
     /**

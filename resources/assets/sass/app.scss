@@ -26,6 +26,11 @@ $tooltip-padding-y: 8px;
 
 // Select2
 @import "~select2/dist/css/select2";
+@import "select2-bootstrap";
+
+//.select2-container {
+//  min-width: 10rem;
+//}
 
 // SweetAlert2
 @import "~sweetalert2/src/sweetalert2";

@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use Notifiable, Searchable;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -96,15 +95,5 @@ class User extends Authenticatable
             return $this->canAccessFolder($folder->parent);
         else
             return false;
-    }
-
-    /**
-     * Restrict the columns for indexing the database.
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        return array_only($this->toArray(), ['id', 'email']);
     }
 }

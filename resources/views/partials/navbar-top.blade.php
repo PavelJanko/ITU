@@ -6,9 +6,10 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarTop">
-            <form class="form-inline">
-                <select id="select2-keywords" class="form-control mr-2"></select>
-                <button class="btn btn-outline-success" type="submit"><i class="fal fa-search"></i> Vyhledat</button>
+            <form action="{{ route('documents.find') }}" method="GET" class="form-inline">
+                <label class="d-none" for="select2KeywordsNavbar"></label>
+                <select id="select2KeywordsNavbar" class="form-control" name="keywords[]" multiple="multiple" style="width: 20rem;"></select>
+                <button class="btn btn-outline-success ml-2" type="submit"><i class="fal fa-search"></i> Vyhledat</button>
             </form>
             <ul class="navbar-nav ml-auto">
                 @if(Auth::check())

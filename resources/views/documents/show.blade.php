@@ -3,15 +3,31 @@
 @section('content')
     <div class="container pt-3">
         <div class="row">
-            <div class="col-9"><h3 class="mb-3">{{ $document->name }} (.{{ $document->extension }})</h3></div>
-            <div class="col-3">
-                <a href="{{ route('documents.download', $document->slug) }}" class="btn btn-secondary pull-right">Stáhnout</a>
+            <div class="col-8"><h3 class="mb-3">{{ $document->name }} (.{{ $document->extension }})</h3></div>
+            <div class="col-4">
+                <a href="{{ route('documents.edit', $document->slug) }}" class="btn btn-warning pull-right">Upravit</a>
+                <a href="{{ route('documents.download', $document->slug) }}" class="btn btn-secondary pull-right mr-2">Stáhnout</a>
+                <form class="pull-right mr-2" action="{{ route('documents.destroy', $document->slug) }}" method="POST">
+                    {{ csrf_field() }}
+                    {{ method_field('DELETE') }}
+                    <button class="btn btn-danger dialog-delete" type="submit"><i class="fal fa-file-times"></i> Odstranit</button>
+                </form>
             </div>
         </div>
+        <h5 class="mb-3">Klíčová slova:</h5>
+        <p>
+            @foreach($document->keywords as $keyword)
+                @unless($loop->last)
+                    {{ $keyword->name }},
+                @else
+                    {{ $keyword->name }}
+                @endunless
+            @endforeach
+        </p>
         <h5 class="mb-3">Abstrakt:</h5>
         <p>{{ $document->abstract }}</p>
         <h5 class="mb-3">Komentáře:</h5>
-        <div class="card mb-3">
+        <div class="card{{ $document->comments->count() ? ' mb-3' : '' }}">
             <div class="card-header">
                 Přidejte nový komentář
             </div>
@@ -30,7 +46,22 @@
         @foreach($document->comments as $comment)
             <div class="card {{ $loop->last ? '' : ' mb-3' }}">
                 <div class="card-header">
-                    {{ $comment->author->name }} <span class="pull-right">napsal {{ $document->created_at->diffForHumans() }}</span>
+                    @if($document->owner_id == Auth::id() || $comment->author_id == Auth::id())
+                        <div class="row">
+                            <div class="col-6 d-flex align-items-center">
+                                {{ $comment->author->name }} napsal {{ $document->created_at->diffForHumans() }}
+                            </div>
+                            <div class="col-6 d-flex justify-content-end">
+                                <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                    <a class="dialog-delete btn btn-danger" href="#"><i class="fal fa-file-times"></i> Odstranit</a>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        {{ $comment->author->name }} napsal {{ $document->created_at->diffForHumans() }}
+                    @endif
                 </div>
                 <div class="card-body">
                     <p class="card-text">{{ $comment->body }}</p>

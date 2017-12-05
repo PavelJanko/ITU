@@ -6,9 +6,9 @@
         <div class="col-9">
             <a class="btn btn-secondary" href="{{ route('groups.edit') }}" role="button"><i class="fal fa-list"></i> Spravovat skupiny</a>
 @else
-    @component('components.table-action-modal', ['route' => route('documents.store'), 'type' => 'document']) modalDocumentNew @endcomponent
-    @component('components.table-action-modal', ['placeholder' => 'Nová složka', 'route' => route('folders.store'), 'type' => 'folderNew']) modalFolderNew @endcomponent
-    @component('components.table-action-modal', ['placeholder' => 'Nová složka', 'type' => 'folderUpdate']) modalFolderUpdate @endcomponent
+    @component('components.table-action-modal', ['parentFolder' => isset($parentFolder) ? $parentFolder : NULL, 'route' => route('documents.store'), 'type' => 'document']) modalDocumentNew @endcomponent
+    @component('components.table-action-modal', ['parentFolder' => isset($parentFolder) ? $parentFolder : NULL, 'placeholder' => 'Nová složka', 'route' => route('folders.store'), 'type' => 'folderNew']) modalFolderNew @endcomponent
+    @component('components.table-action-modal', ['parentFolder' => isset($parentFolder) ? $parentFolder : NULL, 'placeholder' => 'Nová složka', 'type' => 'folderUpdate']) modalFolderUpdate @endcomponent
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalDocumentNew"><i class="fal fa-file-plus"></i> Nahrát</button>
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalFolderNew"><i class="fal fa-plus"></i> Nová složka</button>
@@ -28,7 +28,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @component('components.dashboard-table-rows', ['items' => $folders]) @endcomponent
+                    @if(isset($folders))
+                        @component('components.dashboard-table-rows', ['items' => $folders]) @endcomponent
+                    @endif
                     @component('components.dashboard-table-rows', ['items' => $documents]) @endcomponent
                 </tbody>
             </table>
@@ -57,6 +59,32 @@
             $('[data-toggle="tooltip"]').tooltip({
                 html: true,
                 placement: 'left'
+            });
+
+            $('#modalDocumentNew').on('shown.bs.modal', function() {
+                $('#select2KeywordsModal').select2({
+                    ajax: {
+                        url: 'http://itu.app/keywords',
+                        dataType: 'json',
+                        data: function(params) {
+                            return {
+                                term: $.trim(params.term)
+                            }
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: data
+                            };
+                        },
+                    },
+                    language: 'cs',
+                    maximumSelectionLength: 3,
+                    minimumInputLength: 1,
+                    placeholder: 'Zadejte klíčová slova',
+                    tags: true,
+                    theme: 'bootstrap',
+                    width: 'resolve'
+                });
             });
             
             triggerModalFocus('#modalDocumentNew', '#modalDocumentNewAbstract');

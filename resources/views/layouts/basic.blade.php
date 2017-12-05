@@ -6,6 +6,7 @@
 
 @section('scripts')
     @parent
+
     <script>
         $('.dialog-delete, .dialog-leave').click(function(e) {
             e.preventDefault();

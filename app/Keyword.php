@@ -4,9 +4,12 @@ namespace App;
 
 use App\Scopes\OrderScope;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Keyword extends Model
 {
+    use Searchable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -36,5 +39,15 @@ class Keyword extends Model
     public function documents()
     {
         return $this->belongsToMany(Document::class);
+    }
+
+    /**
+     * Restrict the columns for indexing the database.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return array_only($this->toArray(), ['id', 'name']);
     }
 }

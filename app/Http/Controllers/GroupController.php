@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Document;
+use App\Folder;
 use App\Group;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
@@ -24,20 +27,14 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $documents = collect();
-        $folders = collect();
+        $documents = Document::whereHas('groups.members', function($query) {
+            $query->where('id', Auth::id());
+        })->where('owner_id', '<>', Auth::id())->get();
 
-        Auth::user()->groups()->each(function($item) use ($documents) {
-            $documents->push($item->documents);
-        });
+        $folders = Folder::whereHas('groups.members', function($query) {
+            $query->where('id', Auth::id());
+        })->where('owner_id', '<>', Auth::id())->get();
 
-        Auth::user()->groups()->each(function($item) use ($folders) {
-            $folders->push($item->folders);
-        });
-
-
-        $documents = $documents->collapse()->where('owner_id', '<>', Auth::id())->unique('id')->sortBy('name');
-        $folders = $folders->collapse()->where('owner_id', '<>', Auth::id())->unique('id')->sortBy('name');
         $groups = Auth::user()->groups();
 
         return view('dashboard.index2')->with([
@@ -76,8 +73,8 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        $documents = $group->documents()->where('owner_id', '<>', Auth::id())->get()->sortBy('name');
-        $folders = $group->folders()->where('owner_id', '<>', Auth::id())->get()->sortBy('name');
+        $documents = $group->documents()->where('owner_id', '<>', Auth::id())->get();
+        $folders = $group->folders()->where('owner_id', '<>', Auth::id())->get();
         $groups = Auth::user()->groups();
 
         return view('dashboard.index2')->with([
