@@ -15,6 +15,7 @@
             @endif
             <ul class="navbar-nav ml-auto">
                 @if(Auth::check())
+                    <span class="navbar-text mr-2">Vítejte {{ Auth::user()->name }}!</span>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('folders.index') }}"><i class="fal fa-folder-open"></i> Mé soubory</a>
                     </li>
@@ -29,10 +30,10 @@
                     </li>
                 @else
                     <li class="nav-item mr-2">
-                        <a class="nav-link" href="#"><i class="fal fa-sign-in"></i> Přihlášení</a>
+                        <a class="nav-link" href="{{ route('login') }}"><i class="fal fa-sign-in"></i> Přihlášení</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary" href="#" role="button"><i class="fal fa-child"></i> Registrace</a>
+                        <a class="btn btn-primary" href="{{ route('register') }}" role="button"><i class="fal fa-child"></i> Registrace</a>
                     </li>
                 @endif
             </ul>

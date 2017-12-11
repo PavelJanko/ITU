@@ -5,13 +5,17 @@
         <div class="row">
             <div class="col-8"><h3 class="mb-3">{{ $document->name }} (.{{ $document->extension }})</h3></div>
             <div class="col-4">
-                <a href="{{ route('documents.edit', $document->slug) }}" class="btn btn-warning pull-right">Upravit</a>
-                <a href="{{ route('documents.download', $document->slug) }}" class="btn btn-secondary pull-right mr-2">Stáhnout</a>
-                <form class="pull-right mr-2" action="{{ route('documents.destroy', $document->slug) }}" method="POST">
-                    {{ csrf_field() }}
-                    {{ method_field('DELETE') }}
-                    <button class="btn btn-danger dialog-delete" type="submit"><i class="fal fa-file-times"></i> Odstranit</button>
-                </form>
+                <div class="btn-group pull-right" role="group">
+                    <a href="{{ route('documents.download', $document->slug) }}" class="btn btn-secondary"><i class="fal fa-download"></i> Stáhnout</a>
+                    @if($document->owner_id == Auth::id())
+                        <a href="{{ route('documents.edit', $document->slug) }}" class="btn btn-warning"><i class="fal fa-edit"></i> Upravit</a>
+                        <form action="{{ route('documents.destroy', $document->slug) }}" method="POST">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                            <button class="btn btn-danger dialog-delete" type="submit"><i class="fal fa-file-times"></i> Odstranit</button>
+                        </form>
+                    @endif
+                </div>
             </div>
         </div>
         <h5 class="mb-3">Klíčová slova:</h5>
@@ -49,7 +53,7 @@
                     @if($document->owner_id == Auth::id() || $comment->author_id == Auth::id())
                         <div class="row">
                             <div class="col-6 d-flex align-items-center">
-                                {{ $comment->author->name }} napsal {{ $document->created_at->diffForHumans() }}
+                                {{ $comment->author->name }} napsal {{ $comment->created_at->diffForHumans() }}
                             </div>
                             <div class="col-6 d-flex justify-content-end">
                                 <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">

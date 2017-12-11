@@ -1,15 +1,14 @@
 
-// Fonts
-//@import url("https://fonts.googleapis.com/css?family=Raleway:100,400,700");
-
-// Variables
-//@import "variables";
-
 // Bootstrap
 $font-family-sans-serif: 'Raleway', sans-serif;
 $tooltip-padding-y: 8px;
 
 @import "~bootstrap/scss/bootstrap";
+
+.btn-group form .btn {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
 
 .dropdown-toggle::after {
   margin-left: .5rem;

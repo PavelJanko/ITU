@@ -9,8 +9,6 @@ require('./bootstrap');
 
 require('./fontawesome/fontawesome');
 
-window.Holder = require('holderjs');
-
 window.S2 = require('select2');
 
 window.swal = require('sweetalert2');

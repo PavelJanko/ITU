@@ -23,7 +23,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @unless($folders->count() && $documents->count())
+                    @unless($folders->count() || $documents->count())
                         <tr>
                             <td colspan="3">Nebyly nalezeny žádné položky</td>
                         </tr>

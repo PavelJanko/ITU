@@ -36,7 +36,7 @@ class FolderController extends Controller
 
     /**
      * Display a listing of files and folders that the user can access.
-     * Also show the user groups he belongs to.
+     * Also show the user the groups he belongs to.
      *
      * @param Folder $folder
      * @return \Illuminate\Http\Response

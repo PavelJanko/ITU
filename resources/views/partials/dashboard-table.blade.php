@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @unless(isset($folders) && ($folders->count() || $documents->count()))
+                    @unless((isset($folders) && $folders->count()) || $documents->count())
                         <tr>
                             <td colspan="{{ isset($parentFolder) && $parentFolder->owner->id != Auth::id() ? '3' : '4' }}">Nebyly nalezeny žádné položky.</td>
                         </tr>

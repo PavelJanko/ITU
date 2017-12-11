@@ -166,7 +166,7 @@ class DocumentController extends Controller
             $query->whereIn('name', $request->input('keywords'));
         })->where('owner_id', Auth::id())->get();
 
-        return view('documents.find')->with([
+        return view('dashboard.index')->with([
             'documents' => $documents,
             'pageTitle' => 'Vyhledávání podle klíčových slov'
         ]);
