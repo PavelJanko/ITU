@@ -21,7 +21,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the groups and shared documents and folders.
      *
      * @return \Illuminate\Http\Response
      */
@@ -37,7 +37,7 @@ class GroupController extends Controller
 
         $groups = Auth::user()->groups();
 
-        return view('dashboard.index2')->with([
+        return view('groups.sharing')->with([
             'documents' => $documents,
             'folders' => $folders,
             'groups' => $groups,
@@ -46,7 +46,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created group in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -66,7 +66,8 @@ class GroupController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the documents and folders that
+     * are shared inside the specified group.
      *
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
@@ -77,7 +78,7 @@ class GroupController extends Controller
         $folders = $group->folders()->where('owner_id', '<>', Auth::id())->get();
         $groups = Auth::user()->groups();
 
-        return view('dashboard.index2')->with([
+        return view('groups.sharing')->with([
             'documents' => $documents,
             'folders' => $folders,
             'groups' => $groups,
@@ -130,10 +131,11 @@ class GroupController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified group from storage.
      *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
+     * @param Group $group
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function destroy(Group $group)
     {
@@ -149,6 +151,13 @@ class GroupController extends Controller
         ]);
     }
 
+    /**
+     * Add a member to the specified group.
+     *
+     * @param Request $request
+     * @param Group $group
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function addMember(Request $request, Group $group)
     {
         if($group != NULL && $group->creator_id == Auth::id() && $request->email != Auth::user()->email) {
@@ -173,6 +182,12 @@ class GroupController extends Controller
         abort(401);
     }
 
+    /**
+     * Edit the members for the specified group.
+     *
+     * @param Group $group
+     * @return $this
+     */
     public function editMembers(Group $group)
     {
         if($group != NULL && $group->creator_id == Auth::id())
@@ -187,8 +202,9 @@ class GroupController extends Controller
     /**
      * Detach a user from the specified group.
      *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
+     * @param Group $group
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function leave(Group $group)
     {

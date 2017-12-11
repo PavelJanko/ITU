@@ -67,6 +67,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class);
     }
 
+    /**
+     * Determine whether a user can access the specified document.
+     *
+     * @param Document $document
+     * @return bool
+     */
     public function canAccessDocument(Document $document)
     {
         if($document->owner->id == $this->id)
@@ -82,6 +88,12 @@ class User extends Authenticatable
             return false;
     }
 
+    /**
+     * Determine whether a user can access the specified folder.
+     *
+     * @param Folder $folder
+     * @return bool
+     */
     public function canAccessFolder(Folder $folder)
     {
         if($folder->owner->id == $this->id)

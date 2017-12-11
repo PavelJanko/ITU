@@ -9,13 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    /**
+     * Instantiate a new comment controller instance.
+     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created comment in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -35,17 +38,6 @@ class CommentController extends Controller
             'statusTitle' => 'Úspěch!',
             'statusText' => 'Komentář úspěšně přidán.'
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
     }
 
     /**

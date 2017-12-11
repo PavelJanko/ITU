@@ -20,7 +20,7 @@ class FolderController extends Controller
      * Display a listing of files and folders that the user can access.
      * Also show the user groups he belongs to.
      *
-     * @return @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -116,6 +116,7 @@ class FolderController extends Controller
      *
      * @param Folder $folder
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function destroy(Folder $folder)
     {
@@ -149,8 +150,10 @@ class FolderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified folder's sharing options.
      *
+     * @param Folder $folder
+     * @return $this
      */
     public function sharingEdit(Folder $folder)
     {
@@ -163,10 +166,12 @@ class FolderController extends Controller
         ]);
     }
 
-
     /**
-     * Show the form for editing the specified resource.
+     * Update the sharing options for the specified document in storage.
      *
+     * @param Request $request
+     * @param Folder $folder
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function sharingUpdate(Request $request, Folder $folder)
     {

@@ -9,6 +9,9 @@
         {{-- Page title --}}
         <title>{{ config('app.name') }}{{ isset($pageTitle) ? ' &middot; ' . $pageTitle : '' }}</title>
 
+        {{-- Fonts --}}
+        <link href="https://fonts.googleapis.com/css?family=Raleway:100,400,700" rel="stylesheet">
+
         {{-- CSS --}}
         <link rel="stylesheet" href="/css/app.css">
     </head>

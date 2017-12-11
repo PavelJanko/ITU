@@ -3,28 +3,23 @@
 @section('content')
     @component('components.table-action-modal', ['placeholder' => 'Nová skupina', 'route' => route('groups.store'), 'type' => 'groupNew']) modalGroupNew @endcomponent
     <div class="container">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalGroupNew"><i class="fal fa-plus"></i> Nová skupina</button>
+        <button type="button" class="btn btn-success my-2" data-toggle="modal" data-target="#modalGroupNew"><i class="fal fa-plus"></i> Nová skupina</button>
         <table class="table table-hover">
-            @foreach($groups as $group)
-                @if($loop->first)
-                    <thead>
-                        <tr>
-                            <th scope="col">Název</th>
-                            <th scope="col">Zakladatel</th>
-                            @if($group->creator->id == Auth::id())
-                                <th scope="col">Čas vytvoření</th>
-                            @endif
-                            <th scope="col">Akce</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <thead>
+                <tr>
+                    <th scope="col">Název</th>
+                    <th scope="col">Zakladatel</th>
+                    <th scope="col">Akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                @unless($groups->count())
+                    <td colspan="3">Nebyly nalezeny žádné skupiny.</td>
                 @endif
+                @foreach($groups as $group)
                     <tr>
                         <td>{{ $group->name }}</td>
                         <td>{{ $group->creator->id == Auth::id() ? 'Vy' : $group->creator->name }}</td>
-                        @if($group->creator->id == Auth::id())
-                            <td>{{ $group->created_at->diffForHumans() }}</td>
-                        @endif
                         <td>
                             <div class="btn-group" role="group">
                                 @if($group->creator->id == Auth::id())
@@ -41,8 +36,8 @@
                             </div>
                         </td>
                     </tr>
-            @endforeach
-                </tbody>
+                @endforeach
+            </tbody>
         </table>
     </div>
 @endsection

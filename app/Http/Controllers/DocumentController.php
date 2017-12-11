@@ -45,6 +45,8 @@ class DocumentController extends Controller
         foreach($request->input('keywords') as $keyword)
             $document->keywords()->attach(Keyword::firstOrCreate(['name' => $keyword]));
 
+        $document->keywords()->searchable();
+
         $route = $document->parent == NULL ? 'index' : 'show';
 
         return redirect()->route('folders.' . $route, $document->parent)->with([
@@ -55,8 +57,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * Display a listing of files and folders that the user can access.
-     * Also show the user groups he belongs to.
+     * Display the specified document.
      *
      * @param Document $document
      * @return \Illuminate\Http\Response
@@ -72,6 +73,12 @@ class DocumentController extends Controller
         ]);
     }
 
+    /**
+     * Display the form for editing the specified document.
+     *
+     * @param Document $document
+     * @return $this
+     */
     public function edit(Document $document)
     {
         if($document == NULL || !Auth::user()->canAccessDocument($document))
@@ -83,6 +90,13 @@ class DocumentController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified document in storage.
+     *
+     * @param Document $document
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Document $document, Request $request)
     {
         if($document == NULL || !Auth::user()->canAccessDocument($document))
@@ -96,18 +110,21 @@ class DocumentController extends Controller
         foreach($request->input('keywords') as $keyword)
             $document->keywords()->attach(Keyword::firstOrCreate(['name' => $keyword]));
 
+        $document->keywords()->searchable();
+
         return redirect()->route('documents.show', $document->slug)->with([
             'statusType' => 'success',
             'statusTitle' => 'Úspěch!',
             'statusText' => 'Dokument úspěšně upraven.'
         ]);
     }
-    
+
     /**
      * Remove the specified document from storage.
      *
      * @param Document $document
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function destroy(Document $document)
     {
@@ -115,8 +132,8 @@ class DocumentController extends Controller
             $document->delete();
         else
             abort(401);
-        
-        return redirect()->route('folders.index')->with([
+
+        return redirect()->back()->with([
             'statusType' => 'success',
             'statusTitle' => 'Úspěch!',
             'statusText' => 'Dokument úspěšně odstraněn.'
@@ -124,7 +141,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * Display the specified document.
+     * Download the specified document.
      *
      * @param  \App\Document  $document
      * @return \Illuminate\Http\Response
@@ -137,21 +154,29 @@ class DocumentController extends Controller
         abort(404);
     }
 
+    /**
+     * Find the specified document by keywords.
+     *
+     * @param Request $request
+     * @return $this
+     */
     public function find(Request $request)
     {
         $documents = Document::whereHas('keywords', function($query) use ($request) {
             $query->whereIn('name', $request->input('keywords'));
         })->where('owner_id', Auth::id())->get();
 
-        return view('dashboard.index3')->with([
+        return view('documents.find')->with([
             'documents' => $documents,
             'pageTitle' => 'Vyhledávání podle klíčových slov'
         ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified document's sharing options.
      *
+     * @param Document $document
+     * @return $this
      */
     public function sharingEdit(Document $document)
     {
@@ -164,6 +189,13 @@ class DocumentController extends Controller
         ]);
     }
 
+    /**
+     * Update the sharing options for the specified document in storage.
+     *
+     * @param Request $request
+     * @param Document $document
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function sharingUpdate(Request $request, Document $document)
     {
         $document->groups()->sync($request->input('groups'));

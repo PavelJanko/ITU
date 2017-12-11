@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
                     $folder->parent_id = $folder->owner->folders->count() > 1 ?
                         $folder->owner->folders->where('id', '<>', $folder->id)->pluck('id')->random() : NULL;
 
-                    if(!$folder->owner->folders->where('parent_id', '<>', NULL)->count()) {
+                    if(!$folder->owner->folders->where('parent_id', NULL)->count()) {
                         $rootFolder = $folder->owner->folders->first();
                         $rootFolder->parent_id = NULL;
                         $rootFolder->update();
@@ -72,9 +72,9 @@ class DatabaseSeeder extends Seeder
             });
 
         $this->command->info('Seeduji klíčová slova a připojuji je k dokumentům...');
-        factory(App\Keyword::class, 25)->create()
+        factory(App\Keyword::class, 50)->create()
             ->each(function ($keyword) {
-                for($i = 0; $i < rand(0, 5); $i++)
+                for($i = 0; $i < rand(0, 10); $i++)
                     $keyword->documents()->syncWithoutDetaching(rand(1, \App\Document::count()));
             });
 

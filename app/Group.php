@@ -36,7 +36,7 @@ class Group extends Model
     /**
      * Get the documents that the members of a group can access.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function documents()
     {
@@ -46,7 +46,7 @@ class Group extends Model
     /**
      * Get the folders that the members of a group can access.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function folders()
     {

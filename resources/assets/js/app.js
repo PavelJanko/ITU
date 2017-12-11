@@ -7,7 +7,6 @@
 
 require('./bootstrap');
 
-require('./fontawesome/light');
 require('./fontawesome/fontawesome');
 
 window.Holder = require('holderjs');

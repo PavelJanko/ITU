@@ -9,9 +9,9 @@
     @component('components.table-action-modal', ['parentFolder' => isset($parentFolder) ? $parentFolder : NULL, 'route' => route('documents.store'), 'type' => 'document']) modalDocumentNew @endcomponent
     @component('components.table-action-modal', ['parentFolder' => isset($parentFolder) ? $parentFolder : NULL, 'placeholder' => 'Nová složka', 'route' => route('folders.store'), 'type' => 'folderNew']) modalFolderNew @endcomponent
     @component('components.table-action-modal', ['parentFolder' => isset($parentFolder) ? $parentFolder : NULL, 'placeholder' => 'Nová složka', 'type' => 'folderUpdate']) modalFolderUpdate @endcomponent
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalDocumentNew"><i class="fal fa-file-plus"></i> Nahrát</button>
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalFolderNew"><i class="fal fa-plus"></i> Nová složka</button>
+    <div class="btn-group my-2" role="group">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalDocumentNew"><i class="fal fa-file-plus"></i> Nahrát dokument</button>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalFolderNew"><i class="fal fa-plus"></i> Nová složka</button>
     </div>
 @endif
             <table class="dashboard-table table table-hover">
@@ -28,7 +28,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @if(isset($folders))
+                    @unless(isset($folders) && ($folders->count() || $documents->count()))
+                        <tr>
+                            <td colspan="{{ isset($parentFolder) && $parentFolder->owner->id != Auth::id() ? '3' : '4' }}">Nebyly nalezeny žádné položky.</td>
+                        </tr>
+                    @elseif(isset($folders))
                         @component('components.dashboard-table-rows', ['items' => $folders]) @endcomponent
                     @endif
                     @component('components.dashboard-table-rows', ['items' => $documents]) @endcomponent

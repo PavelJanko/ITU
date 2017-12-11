@@ -1,9 +1,9 @@
 @foreach($items as $item)
     <tr>
         @if($item instanceof \App\Document)
-            <td><i class="fal fa-file-alt"></i> <a class="ml-1" data-toggle="tooltip" href="{{ route('documents.show', $item->slug) }}" title="<strong>Abstrakt:</strong><br>{{ str_limit($item->abstract, 200) }}">{{ $item->name }}</a></td>
+            <td><i class="fal fa-file-alt"></i> <a data-toggle="tooltip" href="{{ route('documents.show', $item->slug) }}" title="<strong>Abstrakt:</strong><br>{{ str_limit($item->abstract, 200) }}">{{ $item->name }}</a></td>
         @else
-            <td><i class="fal fa-folder"></i> <a class="ml-1" href="{{ route('folders.show', $item->slug) }}">{{ $item->name }}</a></td>
+            <td><i class="fal fa-folder"></i> <a href="{{ route('folders.show', $item->slug) }}">{{ $item->name }}</a></td>
         @endif
         <td>{{ $item->extension == NULL ? 'Složka' : $item->extension }}</td>
         @if($item->owner->id != Auth::id())

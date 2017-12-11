@@ -10,6 +10,12 @@ class OrderScope implements Scope
 {
     private $column, $direction;
 
+    /**
+     * Instantiate a new order scope instance.
+     *
+     * @param string $column
+     * @param string $direction
+     */
     public function __construct($column = 'name', $direction = 'asc')
     {
         $this->column = $column;

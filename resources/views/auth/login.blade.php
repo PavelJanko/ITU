@@ -25,7 +25,7 @@
                 </div>
             @endif
         </div>
-        <div class="form-check">
+        <div class="form-check mb-3">
             <label class="form-check-label">
                 <input type="checkbox" name="remember" class="form-check-input"{{ old('remember') ? ' checked' : '' }}> Zapamatovat si mě
             </label>
